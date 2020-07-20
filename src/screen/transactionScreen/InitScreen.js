@@ -18,7 +18,7 @@ class InitScreen extends Component {
         let height = Dimensions.get('window').height
         return (
             <SafeAreaView>
-                <Text>Hello World</Text>
+                <Text>Transaction Screen</Text>
             </SafeAreaView>
         )
     }
