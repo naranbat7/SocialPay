@@ -14,6 +14,8 @@ import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
 import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
+import LoginScreen from './src/screen/loginScreen/InitScreen';
+import SignupScreen from './src/screen/signupScreen/InitScreen';
 
 export default class App extends Component {
   componentDidMount() {}
@@ -113,6 +115,44 @@ const AppStack = createBottomTabNavigator(
     },
     Additional: {
       screen: AdditionalScreen,
+      navigationOptions: {
+        tabBarIcon: ({tintColor, focused}) => (
+          <View>
+            <Icon
+              name="bars"
+              size={30}
+              style={[
+                {
+                  fontWeight: 'bold',
+                  color: tintColor,
+                },
+              ]}
+            />
+          </View>
+        ),
+      },
+    },
+    SignUp: {
+      screen: SignupScreen,
+      navigationOptions: {
+        tabBarIcon: ({tintColor, focused}) => (
+          <View>
+            <Icon
+              name="bars"
+              size={30}
+              style={[
+                {
+                  fontWeight: 'bold',
+                  color: tintColor,
+                },
+              ]}
+            />
+          </View>
+        ),
+      },
+    },
+    Login: {
+      screen: LoginScreen,
       navigationOptions: {
         tabBarIcon: ({tintColor, focused}) => (
           <View>
