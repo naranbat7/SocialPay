@@ -30,7 +30,11 @@ class InitScreen extends Component {
         },
         {
           bgImg: require('../../../assets/images/card-khan.jpg'),
+<<<<<<< HEAD
           cardNumber: '12345214',
+=======
+          cardNumber: '12345667',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
           amount: '9,900',
           selected: false,
         },
@@ -43,7 +47,18 @@ class InitScreen extends Component {
         },
         {
           bgImg: require('../../../assets/images/card-virtual.png'),
+<<<<<<< HEAD
           cardNumber: '541234861',
+=======
+          cardNumber: '98765432',
+          cardType: 'Virtual',
+          amount: '9,900',
+          selected: false,
+        },
+        {
+          bgImg: require('../../../assets/images/card-virtual.png'),
+          cardNumber: '98765432',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
           cardType: 'Virtual',
           amount: '9,900',
           selected: false,
@@ -53,7 +68,11 @@ class InitScreen extends Component {
         {
           date: '2020-07-12',
           amount: '-1,900.00',
+<<<<<<< HEAD
           description: 'TRF=000311100818-949618XXXXXX4493ATM1216>UB',
+=======
+          description: 'TRF=000372300818-949618XXXXXX4493ATM1216>UB',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
         },
         {
           date: '2020-07-13',
@@ -63,17 +82,29 @@ class InitScreen extends Component {
         {
           date: '2020-07-14',
           amount: '-11,200.00',
+<<<<<<< HEAD
           description: 'TRF=000312300818-949618XXXXXX4493ATM1216>UB',
+=======
+          description: 'TRF=000372300818-949618XXXXXX4493ATM1216>UB',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
         },
         {
           date: '2020-07-15',
           amount: '+10,000.00',
+<<<<<<< HEAD
           description: 'TRF=000300000818-949618XXXXXX4493ATM1216>UB',
+=======
+          description: 'TRF=000372300818-949618XXXXXX4493ATM1216>UB',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
         },
         {
           date: '2020-07-16',
           amount: '-3,500.00',
+<<<<<<< HEAD
           description: 'TRF=000356400818-949618XXXXXX4493ATM1216>UB',
+=======
+          description: 'TRF=000372300818-949618XXXXXX4493ATM1216>UB',
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
         },
       ],
       cardPerX: 100,
@@ -121,7 +152,10 @@ class InitScreen extends Component {
           {this.state.cardData.map((item, idx) => {
             return (
               <View
+<<<<<<< HEAD
                 key={idx}
+=======
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
                 style={{
                   width: width,
                   paddingLeft: 10,
@@ -155,7 +189,10 @@ class InitScreen extends Component {
             ? this.state.cardData.map((item, idx) => {
                 return (
                   <TouchableOpacity
+<<<<<<< HEAD
                     key={idx}
+=======
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
                     style={{
                       height: 10,
                       width: 10,
@@ -177,10 +214,16 @@ class InitScreen extends Component {
             bounces={false}
             style={Styles.tranScroll}
             showsVerticalScrollIndicator={false}>
+<<<<<<< HEAD
             {this.state.transactionData.map((item, idx) => {
               return (
                 <Tran
                   key={idx}
+=======
+            {this.state.transactionData.map(item => {
+              return (
+                <Tran
+>>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
                   date={item.date}
                   amount={item.amount}
                   description={item.description}
