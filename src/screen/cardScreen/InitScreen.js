@@ -1,28 +1,24 @@
-import React, { Component } from "react";
-import { Dimensions, View, Text, SafeAreaView } from "react-native";
+import React, {Component} from 'react';
+import {Dimensions, View, Text, SafeAreaView} from 'react-native';
 
 class InitScreen extends Component {
+  constructor(props) {
+    super(props);
 
-    constructor(props) {
-        super(props);
+    this.state = {};
+  }
 
-        this.state = {
-        };
-    }
+  componentDidMount() {}
 
-    componentDidMount() {
-    }
-
-    render() {
-        let width = Dimensions.get('window').width
-        let height = Dimensions.get('window').height
-        return (
-            <SafeAreaView>
-                <Text>Card Screen</Text>
-            </SafeAreaView>
-        )
-    }
-
+  render() {
+    let width = Dimensions.get('window').width;
+    let height = Dimensions.get('window').height;
+    return (
+      <SafeAreaView>
+        <Text>Card</Text>
+      </SafeAreaView>
+    );
+  }
 }
 
 export default InitScreen;

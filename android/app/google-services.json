@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "127487386726",
+    "firebase_url": "https://socialpay-7e262.firebaseio.com",
+    "project_id": "socialpay-7e262",
+    "storage_bucket": "socialpay-7e262.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:127487386726:android:d80dabca0e111a4c3ab9a7",
+        "android_client_info": {
+          "package_name": "com.socialpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "127487386726-t77580cq6lum3pvpqlt53h165cblcinn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbBRfcadZex4IE-BJPdKIBlij_84tSn_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "127487386726-t77580cq6lum3pvpqlt53h165cblcinn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -18,14 +18,17 @@ import LoginScreen from './src/screen/loginScreen/InitScreen';
 import SignupScreen from './src/screen/signupScreen/InitScreen';
 
 export default class App extends Component {
+  constructor() {
+    super();
+    this.state = {
+      login: true,
+    };
+  }
+
   componentDidMount() {}
 
   render() {
-    return (
-      <Root>
-        <AppNavigator />
-      </Root>
-    );
+    return <Root>{this.state.login ? <AppNavigator /> : <LoginScreen />}</Root>;
   }
 }
 
@@ -115,44 +118,6 @@ const AppStack = createBottomTabNavigator(
     },
     Additional: {
       screen: AdditionalScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="bars"
-              size={30}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    SignUp: {
-      screen: SignupScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="bars"
-              size={30}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    Login: {
-      screen: LoginScreen,
       navigationOptions: {
         tabBarIcon: ({tintColor, focused}) => (
           <View>

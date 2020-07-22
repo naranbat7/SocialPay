@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, {Component} from 'react';
 import {Dimensions, ScrollView, Text, SafeAreaView} from 'react-native';
 import {View} from 'native-base';
@@ -264,33 +263,3 @@ class InitScreen extends Component {
 }
 
 export default InitScreen;
-=======
-import React, { Component } from "react";
-import { Dimensions, View, Text, SafeAreaView } from "react-native";
-
-class InitScreen extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-        };
-    }
-
-    componentDidMount() {
-    }
-
-    render() {
-        let width = Dimensions.get('window').width
-        let height = Dimensions.get('window').height
-        return (
-            <SafeAreaView>
-                <Text>Additional Screen</Text>
-            </SafeAreaView>
-        )
-    }
-
-}
-
-export default InitScreen;
->>>>>>> 236c4a4eb6ad2d3a71190f4fe99cf8452f30b867
