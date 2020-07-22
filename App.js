@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {CONSTANTS} from './src/constants/Constants';
 
 import {Root} from 'native-base';
+import PushNotification from 'react-native-push-notification';
 
 import HomeScreen from './src/screen/mainScreen/InitScreen';
 import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
@@ -21,14 +22,32 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      login: true,
+      login: false,
     };
   }
 
-  componentDidMount() {}
+  logIn = () => {
+    this.setState({login: true});
+  };
+
+  async componentDidMount() {
+    PushNotification.configure({
+      onNotification: function(notification) {
+        console.log('NOTIFICATION:', notification);
+      },
+    });
+  }
 
   render() {
-    return <Root>{this.state.login ? <AppNavigator /> : <LoginScreen />}</Root>;
+    return (
+      <Root>
+        {this.state.login ? (
+          <AppNavigator />
+        ) : (
+          <LoginScreen logIn={this.logIn} />
+        )}
+      </Root>
+    );
   }
 }
 
@@ -137,7 +156,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Additional',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,

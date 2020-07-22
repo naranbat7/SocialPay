@@ -9,7 +9,7 @@ export default class InitScreen extends Component {
     return (
       <View style={styles.container}>
         <Logo />
-        <Form type="Нэвтрэх" />
+        <Form type="Нэвтрэх" logIn={this.props.logIn} />
         <View style={styles.SignUpTextCont}>
           <Text style={styles.SignUpButton}> Бүртгүүлэх </Text>
         </View>
