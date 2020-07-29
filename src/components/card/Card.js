@@ -1,14 +1,14 @@
 import React from 'react';
-import {Dimensions, View, Text, ImageBackground} from 'react-native';
+import {Animated, Dimensions, View, Text, ImageBackground} from 'react-native';
 import GlobalStyle from '../../constants/GlobalStyle';
 
 const Card = props => {
   return (
-    <View
+    <Animated.View
       style={[
         {
-          height: 163,
-          width: 260,
+          height: 180,
+          width: 300,
         },
         props.style,
       ]}>
@@ -59,7 +59,7 @@ const Card = props => {
           ) : null}
         </View>
       </ImageBackground>
-    </View>
+    </Animated.View>
   );
 };
 

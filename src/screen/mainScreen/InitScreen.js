@@ -10,7 +10,6 @@ import {
 import {Card} from '../../components/home/Card';
 import {Tran} from '../../components/home/Tran';
 import {ScrollView} from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
@@ -37,6 +36,34 @@ class InitScreen extends Component {
         {
           bgImg: require('../../../assets/images/card-virtual.png'),
           cardNumber: '98765432',
+          cardType: 'Virtual',
+          amount: '9,900',
+          selected: false,
+        },
+        {
+          bgImg: require('../../../assets/images/card-virtual.png'),
+          cardNumber: '541234861',
+          cardType: 'Virtual',
+          amount: '9,900',
+          selected: false,
+        },
+        {
+          bgImg: require('../../../assets/images/card-virtual.png'),
+          cardNumber: '541234861',
+          cardType: 'Virtual',
+          amount: '9,900',
+          selected: false,
+        },
+        {
+          bgImg: require('../../../assets/images/card-virtual.png'),
+          cardNumber: '541234861',
+          cardType: 'Virtual',
+          amount: '9,900',
+          selected: false,
+        },
+        {
+          bgImg: require('../../../assets/images/card-virtual.png'),
+          cardNumber: '541234861',
           cardType: 'Virtual',
           amount: '9,900',
           selected: false,
@@ -83,7 +110,7 @@ class InitScreen extends Component {
   componentDidMount() {}
 
   onScroll = index => {
-    this.refs.cardScrollView.scrollTo({x: width * index, y: 0});
+    this.refs.cardScrollView.scrollTo({x: width * index * 0.725, y: 0});
     const {cardData} = this.state;
     cardData.map((item, idx) => {
       item.selected = idx == index;
@@ -99,9 +126,11 @@ class InitScreen extends Component {
       <SafeAreaView>
         <ScrollView
           ref="cardScrollView"
-          bounces={false}
           horizontal
           pagingEnabled
+          decelerationRate={0.5}
+          snapToInterval={width * 0.725}
+          snapToAlignment={'center'}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={e => {
             let index = Math.round(
@@ -119,18 +148,29 @@ class InitScreen extends Component {
             });
           }}>
           {this.state.cardData.map((item, idx) => {
+            let marginLeft, marginRight;
+            if (idx == 0) marginLeft = 55;
+            else if (idx == this.state.cardData.length - 1) marginRight = 55;
+            else {
+              marginRight = 5;
+              marginLeft = 5;
+            }
             return (
               <View
                 key={idx}
-                style={{
-                  width: width,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  paddingTop: 20,
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
+                style={[
+                  {
+                    width: width * 0.7,
+                    paddingTop: 20,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginLeft: marginLeft,
+                    marginRight: marginRight,
+                  },
+                  item.selected ? null : {scaleY: 0.85},
+                  item.selected ? null : {scaleX: 0.85},
+                ]}>
                 <Card
                   img={item.bgImg}
                   cardNumber={item.cardNumber}

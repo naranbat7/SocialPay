@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import Logo from '../../components/login/Logo';
 import Form from '../../components/login/Form';
@@ -9,9 +9,15 @@ export default class InitScreen extends Component {
     return (
       <View style={styles.container}>
         <Logo />
-        <Form type="Нэвтрэх" logIn={this.props.logIn} />
+        <Form
+          type="Нэвтрэх"
+          logIn={() => console.log('hi ' + this.props.logIn)}
+        />
         <View style={styles.SignUpTextCont}>
-          <Text style={styles.SignUpButton}> Бүртгүүлэх </Text>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Signup')}>
+            <Text style={styles.SignUpButton}> Бүртгүүлэх </Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
