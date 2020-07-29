@@ -1,16 +1,5 @@
 import React, {Component} from 'react';
-import {
-  Dimensions,
-  View,
-  Text,
-  SafeAreaView,
-  StyleSheet,
-  Button,
-  Platform,
-  TextInput,
-  StatusBar,
-  TouchableOpacity,
-} from 'react-native';
+import {Dimensions, View, Text, SafeAreaView, StyleSheet} from 'react-native';
 
 import Logo from '../../components/login/Logo';
 import Form from '../../components/login/Form';

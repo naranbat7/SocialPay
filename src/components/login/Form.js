@@ -35,7 +35,7 @@ export default class Form extends Component {
           secureTextEntry={true}
           placeholderTextColor="#000000"
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={this.props.logIn}>
           <Text style={styles.buttonText}>{this.props.type}</Text>
         </TouchableOpacity>
       </View>

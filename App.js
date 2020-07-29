@@ -1,21 +1,27 @@
 import React, {Component} from 'react';
-import {AppRegistry, View} from 'react-native';
+import {AppRegistry, View, Alert} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
+
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+
+import PushNotification from 'react-native-push-notification';
+
+import LoginScreen from './src/screen/loginScreen/InitScreen';
+import SignupScreen from './src/screen/signupScreen/InitScreen';
 
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 import {CONSTANTS} from './src/constants/Constants';
-
-import {Root} from 'native-base';
 
 import HomeScreen from './src/screen/mainScreen/InitScreen';
 import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
 import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
-import LoginScreen from './src/screen/loginScreen/InitScreen';
-import SignupScreen from './src/screen/signupScreen/InitScreen';
+
+const Stack = createStackNavigator();
 
 export default class App extends Component {
   constructor() {
@@ -25,10 +31,30 @@ export default class App extends Component {
     };
   }
 
-  componentDidMount() {}
+  logIn = () => {
+    this.setState({login: true});
+  };
+
+  async componentDidMount() {
+    PushNotification.configure({
+      onNotification: function(notification) {
+        console.log('NOTIFICATION:', notification);
+        Alert.alert('hello');
+      },
+    });
+  }
 
   render() {
-    return <Root>{this.state.login ? <AppNavigator /> : <LoginScreen />}</Root>;
+    return this.state.login ? (
+      <AppNavigator />
+    ) : (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Signup" component={SignupScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
   }
 }
 
@@ -137,7 +163,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Card',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,
