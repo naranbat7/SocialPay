@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {AppRegistry, View, Alert} from 'react-native';
+import {
+  AppRegistry,
+  View,
+  Alert,
+  Image,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
@@ -20,6 +27,9 @@ import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
 import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
+//import {TouchableOpacity} from 'react-native-gesture-handler';
+
+const axios = require('axios');
 
 const Stack = createStackNavigator();
 
@@ -28,35 +38,143 @@ export default class App extends Component {
     super();
     this.state = {
       login: true,
+      notif: false,
+      notificationDetails: {
+        title: null,
+        message: null,
+        image: null,
+      },
     };
   }
 
   logIn = () => {
-    this.setState({login: true});
+    this.setState({...this.state, login: true});
+  };
+
+  /* Notification start     */
+
+  isNotif = value => {
+    this.setState({...this.state, notif: value});
+  };
+
+  notificationChecker = notification => {
+    if (notification) {
+      this.setState({
+        ...this.state,
+        notificationDetails: {
+          title: notification.title,
+          message: notification.message,
+          image: notification.data.image,
+        },
+      });
+      this.isNotif(true);
+    }
   };
 
   async componentDidMount() {
+    // axios
+    //   .get('http://10.0.2.2:3000/')
+    //   .then(response => {
+    //     console.log(Alert.alert('response'));
+    //   })
+    //   .catch(error => {
+    //     console.log('error');
+    //   });
+
     PushNotification.configure({
-      onNotification: function(notification) {
-        console.log('NOTIFICATION:', notification);
-        Alert.alert('hello');
+      onNotification: notification => {
+        this.notificationChecker(notification);
       },
     });
   }
 
+  /* Notification End */
+
   render() {
     return this.state.login ? (
-      <AppNavigator />
+      <View style={{flex: 1}}>
+        <AppNavigator />
+        {this.state.notif ? (
+          <NotificationView
+            close={() => this.isNotif(false)}
+            data={this.state.notificationDetails}
+          />
+        ) : null}
+      </View>
     ) : (
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Signup" component={SignupScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <View style={{flex: 1}}>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </View>
     );
   }
 }
+
+const NotificationView = props => {
+  return (
+    <View
+      style={{
+        width: '96%',
+        alignSelf: 'center',
+        position: 'absolute',
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 0},
+        shadowOpacity: 0.8,
+        shadowRadius: 30,
+        elevation: 5,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        height: 100,
+        display: 'none',
+      }}>
+      <View style={{height: '75%', flexDirection: 'row'}}>
+        <View style={{width: '80%'}}>
+          <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>
+            {props.data.title}
+          </Text>
+          <Text style={{color: '#000', fontSize: 14}}>
+            {props.data.message}
+          </Text>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            marginTop: 10,
+          }}>
+          <Image
+            source={{uri: props.data.image}}
+            style={{
+              position: 'absolute',
+              height: 35,
+              width: 35,
+            }}
+          />
+        </View>
+      </View>
+      <TouchableOpacity
+        style={{flex: 1, justifyContent: 'center'}}
+        onPress={props.close}>
+        <Text
+          style={{
+            color: '#2d88ff',
+            fontSize: 16,
+            marginRight: 15,
+            textAlign: 'right',
+          }}>
+          Хаах
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const AppStack = createBottomTabNavigator(
   {
@@ -67,7 +185,7 @@ const AppStack = createBottomTabNavigator(
           <View>
             <Icon
               name="user"
-              size={30}
+              size={25}
               style={[
                 {
                   fontWeight: 'bold',
@@ -86,7 +204,7 @@ const AppStack = createBottomTabNavigator(
           <View>
             <Icon
               name="home"
-              size={35}
+              size={30}
               style={[
                 {
                   fontWeight: 'bold',
@@ -105,10 +223,10 @@ const AppStack = createBottomTabNavigator(
           <View>
             <Icon
               name="angle-double-up"
-              size={40}
+              size={30}
               style={[
                 {
-                  backgroundColor: '#0959E3',
+                  backgroundColor: '#2d88ff',
                   paddingTop: 5,
                   paddingBottom: 5,
                   paddingLeft: 15,
@@ -130,7 +248,7 @@ const AppStack = createBottomTabNavigator(
           <View>
             <Icon
               name="credit-card"
-              size={30}
+              size={25}
               style={[
                 {
                   fontWeight: 'bold',
@@ -149,7 +267,7 @@ const AppStack = createBottomTabNavigator(
           <View>
             <Icon
               name="bars"
-              size={30}
+              size={25}
               style={[
                 {
                   fontWeight: 'bold',
@@ -163,12 +281,12 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Card',
+    initialRouteName: 'Additional',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,
       style: {
-        height: 50,
+        height: 40,
         backgroundColor: '#fff',
         width: '100%',
         shadowColor: '#000000',

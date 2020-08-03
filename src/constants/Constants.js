@@ -3,6 +3,6 @@ export const CONSTANTS = {
     background: '#0B282E',
     brand: '#57B952',
     light: '#FEFEFE',
-    dark: '#0959E3',
+    dark: '#2d88ff',
   },
 };

@@ -13,7 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
-let tranHeight = height - 180 - 105;
+let tranHeight = height - 180 - 135;
 
 class InitScreen extends Component {
   constructor(props) {
@@ -200,7 +200,7 @@ class InitScreen extends Component {
                       height: 10,
                       width: 10,
                       borderRadius: 50,
-                      backgroundColor: item.selected ? '#0984E3' : '#ACACAC',
+                      backgroundColor: item.selected ? '#2d88ff' : '#ACACAC',
                       marginHorizontal: 5,
                     }}
                     onPress={() => {
@@ -213,10 +213,7 @@ class InitScreen extends Component {
         </View>
         <View style={Styles.tran}>
           <Text style={Styles.tranTitle}>Сүүлийн гүйлгээ</Text>
-          <ScrollView
-            bounces={false}
-            style={Styles.tranScroll}
-            showsVerticalScrollIndicator={false}>
+          <ScrollView bounces={false} style={Styles.tranScroll}>
             {this.state.transactionData.map((item, idx) => {
               return (
                 <Tran
@@ -257,7 +254,7 @@ const Styles = StyleSheet.create({
   tranScroll: {
     backgroundColor: '#fff',
     margin: 20,
-    marginBottom: 60,
+    marginBottom: 20,
   },
 });
 
