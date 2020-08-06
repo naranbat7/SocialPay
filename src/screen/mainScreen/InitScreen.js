@@ -10,6 +10,7 @@ import {
 import {Card} from '../../components/home/Card';
 import {Tran} from '../../components/home/Tran';
 import {ScrollView} from 'react-native-gesture-handler';
+import {CONSTANTS} from '../../constants/Constants';
 
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
@@ -36,34 +37,6 @@ class InitScreen extends Component {
         {
           bgImg: require('../../../assets/images/card-virtual.png'),
           cardNumber: '98765432',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '541234861',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '541234861',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '541234861',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '541234861',
           cardType: 'Virtual',
           amount: '9,900',
           selected: false,
@@ -110,7 +83,7 @@ class InitScreen extends Component {
   componentDidMount() {}
 
   onScroll = index => {
-    this.refs.cardScrollView.scrollTo({x: width * index * 0.725, y: 0});
+    this.refs.cardScrollView.scrollTo({x: width * index * 0.785, y: 0});
     const {cardData} = this.state;
     cardData.map((item, idx) => {
       item.selected = idx == index;
@@ -129,7 +102,7 @@ class InitScreen extends Component {
           horizontal
           pagingEnabled
           decelerationRate={0.5}
-          snapToInterval={width * 0.725}
+          snapToInterval={width * 0.785}
           snapToAlignment={'center'}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={e => {
@@ -149,28 +122,28 @@ class InitScreen extends Component {
           }}>
           {this.state.cardData.map((item, idx) => {
             let marginLeft, marginRight;
-            if (idx == 0) marginLeft = 55;
-            else if (idx == this.state.cardData.length - 1) marginRight = 55;
-            else {
-              marginRight = 5;
-              marginLeft = 5;
+            if (idx == 0) {
+              marginLeft = 55;
+              marginRight = 15;
+            } else if (idx == this.state.cardData.length - 1) {
+              marginRight = 55;
+              marginLeft = 15;
+            } else {
+              marginRight = 15;
+              marginLeft = 15;
             }
             return (
               <View
                 key={idx}
-                style={[
-                  {
-                    width: width * 0.7,
-                    paddingTop: 20,
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginLeft: marginLeft,
-                    marginRight: marginRight,
-                  },
-                  item.selected ? null : {scaleY: 0.85},
-                  item.selected ? null : {scaleX: 0.85},
-                ]}>
+                style={{
+                  width: width * 0.7,
+                  paddingTop: 20,
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: marginLeft,
+                  marginRight: marginRight,
+                }}>
                 <Card
                   img={item.bgImg}
                   cardNumber={item.cardNumber}
@@ -200,7 +173,9 @@ class InitScreen extends Component {
                       height: 10,
                       width: 10,
                       borderRadius: 50,
-                      backgroundColor: item.selected ? '#2d88ff' : '#ACACAC',
+                      backgroundColor: item.selected
+                        ? CONSTANTS.color.dark
+                        : '#ACACAC',
                       marginHorizontal: 5,
                     }}
                     onPress={() => {
@@ -236,7 +211,7 @@ const Styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: '90%',
     marginLeft: '5%',
-    marginTop: 30,
+    marginTop: 20,
     height: tranHeight,
     borderRadius: 10,
     shadowColor: '#000000',
@@ -246,14 +221,15 @@ const Styles = StyleSheet.create({
     elevation: 5,
   },
   tranTitle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
     marginLeft: 20,
     marginTop: 10,
   },
   tranScroll: {
     backgroundColor: '#fff',
-    margin: 20,
+    marginHorizontal: 15,
+    marginTop: 10,
     marginBottom: 20,
   },
 });

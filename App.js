@@ -6,6 +6,8 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  Animated,
+  Easing,
 } from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -39,6 +41,7 @@ export default class App extends Component {
     this.state = {
       login: true,
       notif: false,
+      positionValue: new Animated.Value(-110),
       notificationDetails: {
         title: null,
         message: null,
@@ -51,10 +54,13 @@ export default class App extends Component {
     this.setState({...this.state, login: true});
   };
 
-  /* Notification start     */
-
   isNotif = value => {
     this.setState({...this.state, notif: value});
+    Animated.timing(this.state.positionValue, {
+      toValue: value ? 0 : -110,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
   };
 
   notificationChecker = notification => {
@@ -94,12 +100,12 @@ export default class App extends Component {
     return this.state.login ? (
       <View style={{flex: 1}}>
         <AppNavigator />
-        {this.state.notif ? (
-          <NotificationView
-            close={() => this.isNotif(false)}
-            data={this.state.notificationDetails}
-          />
-        ) : null}
+
+        <NotificationView
+          close={() => this.isNotif(false)}
+          data={this.state.notificationDetails}
+          value={this.state}
+        />
       </View>
     ) : (
       <View style={{flex: 1}}>
@@ -116,7 +122,7 @@ export default class App extends Component {
 
 const NotificationView = props => {
   return (
-    <View
+    <Animated.View
       style={{
         width: '96%',
         alignSelf: 'center',
@@ -132,6 +138,7 @@ const NotificationView = props => {
         paddingVertical: 10,
         height: 100,
         display: 'none',
+        translateY: props.value.positionValue,
       }}>
       <View style={{height: '75%', flexDirection: 'row'}}>
         <View style={{width: '80%'}}>
@@ -172,7 +179,7 @@ const NotificationView = props => {
           Хаах
         </Text>
       </TouchableOpacity>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -281,7 +288,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Additional',
+    initialRouteName: 'Card',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,

@@ -2,23 +2,19 @@ import React from 'react';
 import {Animated, Dimensions, View, Text, ImageBackground} from 'react-native';
 import GlobalStyle from '../../constants/GlobalStyle';
 
+const width = Dimensions.get('window').width;
+
 const Card = props => {
   return (
     <Animated.View
-      style={[
-        {
-          height: 180,
-          width: 300,
-        },
-        props.style,
-      ]}>
+      style={[{height: (width * 180) / 300, width: width}, props.style]}>
       <ImageBackground
         style={{
           flex: 1,
           resizeMode: 'cover',
           padding: 25,
         }}
-        borderRadius={25}
+        borderRadius={props.borderRadius}
         source={props.img}>
         <View
           style={{

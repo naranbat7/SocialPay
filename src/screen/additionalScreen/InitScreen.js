@@ -28,6 +28,10 @@ class InitScreen extends Component {
       ],
       specialData: [
         {
+          img: require('../../../assets/images/additional/unitel.jpg'),
+          title: 'Unitel дата',
+        },
+        {
           img: require('../../../assets/images/additional/avlaa.mn.jpg'),
           title: 'Avlaa.mn | Summer sale',
         },
@@ -125,7 +129,7 @@ class InitScreen extends Component {
     return (
       <SafeAreaView style={{flex: 1}}>
         <ScrollView
-          style={{height: (height / 20) * 9}}
+          style={{height: (height / 20) * 9, marginTop: 5}}
           horizontal={true}
           decelerationRate={0.5}
           snapToInterval={width - 35}

@@ -15,7 +15,16 @@ let height = Dimensions.get('window').height;
 const Special = props => {
   return (
     <TouchableOpacity
-      style={props.style}
+      style={[
+        {
+          shadowColor: '#000000',
+          shadowOffset: {width: 0, height: 0},
+          shadowOpacity: 0.8,
+          shadowRadius: 10,
+          elevation: 2,
+        },
+        props.style,
+      ]}
       activeOpacity={1}
       onPress={() => Alert.alert(props.title)}>
       <View style={css.img}>

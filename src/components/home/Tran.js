@@ -5,7 +5,7 @@ import GlobalStyle from '../../constants/GlobalStyle';
 const Tran = props => {
   return (
     <View {...props} style={Styles.container}>
-      <Text>{props.date}</Text>
+      <Text style={{fontSize: 13, color: '#777'}}>{props.date}</Text>
       <Text
         style={[
           Styles.amount,
@@ -13,7 +13,7 @@ const Tran = props => {
         ]}>
         {props.amount}
       </Text>
-      <Text>{props.description}</Text>
+      <Text style={{fontSize: 13, color: '#1a2b3c'}}>{props.description}</Text>
     </View>
   );
 };
@@ -36,6 +36,7 @@ const Styles = StyleSheet.create({
     position: 'absolute',
     right: 20,
     top: 5,
+    fontSize: 13,
   },
   amountPlus: {
     color: '#27ae60',
