@@ -11,11 +11,12 @@ import {
 class Display extends Component {
   static defaultProps = {
     display: '',
+    value: '',
   };
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.display}>{this.props.display} </Text>
+        <Text style={styles.display}>{this.props.display}</Text>
       </View>
     );
   }
@@ -25,10 +26,16 @@ export default Display;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
+    paddingTop: 100,
   },
   display: {
-    fontSize: 80,
+    fontSize: 70,
+    color: '#002EFF',
+    textAlign: 'center',
+    
+  },
+  value: {
+    fontSize: 40,
     color: '#002EFF',
     textAlign: 'center',
   },
