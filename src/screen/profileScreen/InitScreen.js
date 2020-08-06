@@ -10,6 +10,7 @@ import {
 import Name from '../../components/user/Name';
 import Item from '../../components/user/Item';
 import NonItem from '../../components/user/NonItem';
+import {CONSTANTS} from '../../constants/Constants';
 
 class InitScreen extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class InitScreen extends Component {
 
     this.state = {
       items: {
-        userName: 'Дөлгөөн',
+        userName: 'Эвсанаа',
         socialName: 'Голомт банк',
         socialNumber: '2705137424',
         otherName: 'Хаан банк',
@@ -45,7 +46,7 @@ class InitScreen extends Component {
           img={require('./../../../assets/images/hacker.png')}
           text={this.state.items.userName}
         />
-        <ScrollView style={{marginBottom: '37%'}}>
+        <ScrollView style={{marginBottom: '45%'}}>
           <View style={styles.infoCon}>
             <Text style={styles.h1}>Social данс</Text>
             <Item
@@ -110,7 +111,11 @@ class InitScreen extends Component {
               text="Social PIN"
               number={this.state.items.socialPin}
             />
-            <NonItem color="#FF3B3B" text="Холболт салгах" />
+            <NonItem
+              color="#FF3B3B"
+              text="Холболт салгах"
+              style={{borderBottomWidth: 0}}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -120,7 +125,7 @@ class InitScreen extends Component {
 
 const styles = StyleSheet.create({
   infoCon: {
-    paddingBottom: 20,
+    paddingBottom: 0,
     marginHorizontal: 20,
     borderRadius: 10,
     borderWidth: 0.5,
