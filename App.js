@@ -29,6 +29,7 @@ import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
 import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
+import CardAdd from './src/components/card/CardAdd';
 //import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const axios = require('axios');

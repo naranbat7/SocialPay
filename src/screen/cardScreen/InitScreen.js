@@ -11,6 +11,7 @@ import {Card} from '../../components/card/Card';
 import {CONSTANTS} from '../../constants/Constants';
 import CardInfo from '../../components/card/CardInfo';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import CardAdd from '../../components/card/CardAdd';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -21,6 +22,7 @@ class InitScreen extends Component {
 
     this.state = {
       modalVisible: false,
+      cardAddVisible: false,
       virtualCardData: {
         bgImg: require('../../../assets/images/card-virtual.png'),
         cardNumber: '541234861',
@@ -65,6 +67,10 @@ class InitScreen extends Component {
   }
 
   componentDidMount() {}
+
+  showCardAdd = value => {
+    this.setState({...this.state, cardAddVisible: value});
+  };
 
   /*    Animation Start    */
 
@@ -130,7 +136,9 @@ class InitScreen extends Component {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <TouchableOpacity style={{marginRight: 15}}>
+            <TouchableOpacity
+              style={{marginRight: 15}}
+              onPress={() => this.showCardAdd(true)}>
               <Icon
                 name="plus-circle"
                 size={25}
@@ -181,6 +189,10 @@ class InitScreen extends Component {
                 closeCardInfo={() =>
                   this.showCardInfo(this.state.virtualCardData, false)
                 }
+              />
+              <CardAdd
+                visible={this.state.cardAddVisible}
+                closeCardInfo={() => this.showCardAdd(false)}
               />
             </Animated.View>
           </View>
