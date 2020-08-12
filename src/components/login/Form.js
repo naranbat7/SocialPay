@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+const axios = require('axios');
+
 export default class Form extends Component {
   render() {
     let width = Dimensions.get('window').width;
@@ -35,7 +37,27 @@ export default class Form extends Component {
           secureTextEntry={true}
           placeholderTextColor="#000000"
         />
-        <TouchableOpacity style={styles.button} onPress={this.props.logIn}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            axios
+              .post(
+                'http://192.168.205.168:8050/api/info/auth',
+                {password: '86960036', username: 'user1144'},
+                {
+                  'Content-Type': 'application/json',
+                },
+              )
+              .then(response => {
+                console.log('Амжилттай нэвтэрлээ');
+                console.log(response.data);
+                this.props.setlogIn(response.data);
+              })
+              .catch(error => {
+                console.log('Нэвтэрч чадсангүй');
+                //console.log(error);
+              });
+          }}>
           <Text style={styles.buttonText}>{this.props.type}</Text>
         </TouchableOpacity>
       </View>

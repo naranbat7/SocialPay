@@ -50,14 +50,14 @@ class CardInfo extends Component {
       ],
     };
   }
-
+  // * Item description handler
   changeItem = index => {
     this.refs.cardScrollView.scrollTo({x: width * index, y: 0});
     let {selectedItem} = this.state;
     selectedItem = index;
     this.setState({...this.state, selectedItem: selectedItem});
   };
-
+  // * Modal toggle handler
   showModal = value => {
     Animated.timing(this.state.modalOpacity, {
       toValue: value ? 1 : 0,

@@ -44,7 +44,7 @@ const Item = props => {
           <Icon name="chevron-right" solid size={15} style={styles.chevron} />
         </TouchableOpacity>
       ) : null}
-      {props.number == 'null' && props.id == undefined ? (
+      {props.number == null && props.id == undefined ? (
         <TouchableOpacity
           style={styles.right}
           onPress={() => {
@@ -56,9 +56,9 @@ const Item = props => {
           <Icon name="chevron-right" solid size={15} style={styles.chevron} />
         </TouchableOpacity>
       ) : null}
-      {props.number != 'null' && props.id == undefined ? (
+      {props.number != null && props.id == undefined ? (
         <TouchableOpacity
-          style={styles.right}
+          style={[styles.right, props.style]}
           onPress={() => {
             Alert.alert(props.text);
           }}>

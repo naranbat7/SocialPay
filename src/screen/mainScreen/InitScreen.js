@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import {Card} from '../../components/home/Card';
 import {Tran} from '../../components/home/Tran';
@@ -14,41 +15,14 @@ import {CONSTANTS} from '../../constants/Constants';
 
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
-let tranHeight = height - 180 - 135;
+let tranHeight = height - 180 - 105;
 
 class InitScreen extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      cardData: [
-        {
-          bgImg: require('../../../assets/images/card-carbon.jpg'),
-          cardNumber: '12331311',
-          amount: '9,900',
-          selected: true,
-        },
-        {
-          bgImg: require('../../../assets/images/card-khan.jpg'),
-          cardNumber: '12345214',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '98765432',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '541234861',
-          cardType: 'Virtual',
-          amount: '9,900',
-          selected: false,
-        },
-      ],
+      cardData: null,
       transactionData: [
         {
           date: '2020-07-12',
@@ -80,112 +54,66 @@ class InitScreen extends Component {
     };
   }
 
-  componentDidMount() {}
-
-  onScroll = index => {
-    this.refs.cardScrollView.scrollTo({x: width * index * 0.785, y: 0});
-    const {cardData} = this.state;
-    cardData.map((item, idx) => {
-      item.selected = idx == index;
+  async componentDidMount() {
+    AsyncStorage.getItem('information', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          this.setState({cardData: data.accounts});
+          this.setState({token: data.token});
+        } else console.log('result is null');
+      } else console.log('errs');
     });
-    this.setState({
-      ...this.state,
-      cardData: cardData,
-    });
-  };
+  }
 
   render() {
     return (
       <SafeAreaView>
         <ScrollView
-          ref="cardScrollView"
           horizontal
           pagingEnabled
           decelerationRate={0.5}
           snapToInterval={width * 0.785}
           snapToAlignment={'center'}
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={e => {
-            let index = Math.round(
-              e.nativeEvent.contentOffset.x /
-                (e.nativeEvent.contentSize.width / this.state.cardData.length),
-            );
-            const {cardData} = this.state;
-            cardData[index].selected = true;
-            cardData.map((item, idx) => {
-              item.selected = idx == index;
-            });
-            this.setState({
-              ...this.state,
-              cardData: cardData,
-            });
-          }}>
-          {this.state.cardData.map((item, idx) => {
-            let marginLeft, marginRight;
-            if (idx == 0) {
-              marginLeft = 55;
-              marginRight = 15;
-            } else if (idx == this.state.cardData.length - 1) {
-              marginRight = 55;
-              marginLeft = 15;
-            } else {
-              marginRight = 15;
-              marginLeft = 15;
-            }
-            return (
-              <View
-                key={idx}
-                style={{
-                  width: width * 0.7,
-                  paddingTop: 20,
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginLeft: marginLeft,
-                  marginRight: marginRight,
-                }}>
-                <Card
-                  img={item.bgImg}
-                  cardNumber={item.cardNumber}
-                  cardType={item.cardType}
-                  amount={item.amount}
-                />
-              </View>
-            );
-          })}
-        </ScrollView>
-        <View
-          style={{
-            marginTop: 30,
-            flex: 1,
-            flexDirection: 'row',
-            width: width,
-            height: height,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {this.state.cardData.length > 0
-            ? this.state.cardData.map((item, idx) => {
-                return (
-                  <TouchableOpacity
-                    key={idx}
-                    style={{
-                      height: 10,
-                      width: 10,
-                      borderRadius: 50,
-                      backgroundColor: item.selected
-                        ? CONSTANTS.color.dark
-                        : '#ACACAC',
-                      marginHorizontal: 5,
-                    }}
-                    onPress={() => {
-                      this.onScroll(idx);
-                    }}
+          showsHorizontalScrollIndicator={false}>
+          {this.state.cardData &&
+            this.state.cardData.map((item, idx) => {
+              let marginLeft, marginRight;
+              if (idx == 0) {
+                marginLeft = 55;
+                marginRight = 15;
+              } else if (
+                idx == (this.state.cardData && this.state.cardData.length - 1)
+              ) {
+                marginRight = 55;
+                marginLeft = 15;
+              } else {
+                marginRight = 15;
+                marginLeft = 15;
+              }
+              return (
+                <View
+                  key={idx}
+                  style={{
+                    width: width * 0.7,
+                    paddingTop: 20,
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginLeft: marginLeft,
+                    marginRight: marginRight,
+                  }}>
+                  <Card
+                    index={idx}
+                    img={item.bgImg}
+                    cardNumber={item}
+                    cardType={item.cardType}
+                    amount={item.amount}
                   />
-                );
-              })
-            : null}
-        </View>
+                </View>
+              );
+            })}
+        </ScrollView>
         <View style={Styles.tran}>
           <Text style={Styles.tranTitle}>Сүүлийн гүйлгээ</Text>
           <ScrollView bounces={false} style={Styles.tranScroll}>

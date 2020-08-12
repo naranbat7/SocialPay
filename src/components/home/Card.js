@@ -1,8 +1,23 @@
 import React from 'react';
-import {Dimensions, View, Text, ImageBackground} from 'react-native';
+import {
+  Dimensions,
+  View,
+  Text,
+  ImageBackground,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import GlobalStyle from '../../constants/GlobalStyle';
 
 const Card = props => {
+  let imgLink;
+  if (props.index % 3 == 0) {
+    imgLink = require('../../../assets/images/card-front.png');
+  } else if (props.index % 3 == 1) {
+    imgLink = require('../../../assets/images/card-green.png');
+  } else {
+    imgLink = require('../../../assets/images/card-blue.jpg');
+  }
   return (
     <View
       style={[
@@ -18,8 +33,8 @@ const Card = props => {
           resizeMode: 'cover',
           padding: 25,
         }}
-        borderRadius={25}
-        source={props.img}>
+        borderRadius={15}
+        source={props.img ? props.img : imgLink}>
         <View
           style={{
             flexDirection: 'row',
@@ -43,21 +58,39 @@ const Card = props => {
         </View>
         <View
           style={{
-            position: 'absolute',
-            bottom: 0,
-            padding: 25,
+            // position: 'absolute',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}>
           <Text
-            style={[GlobalStyle.fontRegular, {fontSize: 14, color: '#fff'}]}>
-            {props.cardNumber}
+            style={[
+              GlobalStyle.fontRegular,
+              {fontSize: 24, color: '#fff', letterSpacing: 2},
+            ]}>
+            {props.cardNumber.slice(0, 3)} **** {props.cardNumber.slice(7, 10)}
           </Text>
-          {props.amount ? (
-            <Text
-              style={[GlobalStyle.fontRegular, {fontSize: 22, color: '#fff'}]}>
-              {props.amount} ₮
-            </Text>
-          ) : null}
         </View>
+        <TouchableOpacity
+          onPress={() => console.log('500₮ хха')}
+          style={{
+            marginTop: 25,
+            right: 10,
+            borderColor: '#fff',
+            borderWidth: 1,
+            width: 120,
+            borderRadius: 5,
+          }}>
+          <Text
+            style={{
+              fontSize: 10,
+              color: '#fff',
+              textTransform: 'uppercase',
+              paddingVertical: 7,
+              textAlign: 'center',
+            }}>
+            Үлдэгдэл шалгах
+          </Text>
+        </TouchableOpacity>
       </ImageBackground>
     </View>
   );

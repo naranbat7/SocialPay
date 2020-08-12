@@ -7,7 +7,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import {CreditCardInput} from 'react-native-credit-card-input';
 
 const s = StyleSheet.create({
   switch: {
@@ -30,7 +29,9 @@ const s = StyleSheet.create({
 });
 
 export default class CardAdd extends Component {
-  state = {useLiteCreditCardInput: false, modalOpacity: new Animated.Value(0)};
+  state = {modalOpacity: new Animated.Value(0)};
+
+  // * Modal toggle animation function
 
   showModal = value => {
     Animated.timing(this.state.modalOpacity, {
@@ -41,6 +42,7 @@ export default class CardAdd extends Component {
   };
 
   render() {
+    // * Modal toggle condition depends on Parent button effect
     if (this.props.visible == true) {
       this.showModal(true);
     } else {
@@ -59,7 +61,7 @@ export default class CardAdd extends Component {
               paddingTop: 20,
             },
           ]}>
-          <CreditCardInput
+          <View
             autoFocus
             requiresName
             requiresCVC
@@ -72,9 +74,9 @@ export default class CardAdd extends Component {
           <View
             style={{
               width: '100%',
+              height: '100%',
               alignItems: 'center',
-              position: 'absolute',
-              bottom: 50,
+              justifyContent: 'flex-end',
             }}>
             <TouchableOpacity
               style={{

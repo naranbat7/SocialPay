@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  AsyncStorage,
 } from 'react-native';
 import Name from '../../components/user/Name';
 import Item from '../../components/user/Item';
@@ -17,24 +18,26 @@ class InitScreen extends Component {
     super(props);
 
     this.state = {
-      items: {
-        userName: 'Эвсанаа',
-        socialName: 'Голомт банк',
-        socialNumber: '2705137424',
-        otherName: 'Хаан банк',
-        otherNumber: '5057567024',
-        telNumber: '86960036',
-        emailNumber: 'null',
-        facebookNumber: 'null',
-        twitterNumber: 'null',
-        eBarimtNumber: 'null',
-        fingerPrint: 'null',
-        socialPin: 'null',
-      },
+      user: null,
+      account: null,
+      token: null,
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    AsyncStorage.getItem('information', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          this.setState({user: data.user});
+          this.setState({account: data.accounts});
+          this.setState({token: data.token});
+          console.log('result -> user parse: ' + data.user);
+          console.log(this.state.user);
+        } else console.log('result is null');
+      } else console.log('errs');
+    });
+  }
 
   render() {
     let width = Dimensions.get('window').width;
@@ -44,7 +47,7 @@ class InitScreen extends Component {
       <SafeAreaView>
         <Name
           img={require('./../../../assets/images/hacker.png')}
-          text={this.state.items.userName}
+          text={this.state.user ? this.state.user.firstName : null}
         />
         <ScrollView style={{marginBottom: '45%'}}>
           <View style={styles.infoCon}>
@@ -52,15 +55,15 @@ class InitScreen extends Component {
             <Item
               icon="credit-card"
               size={12}
-              text={this.state.items.socialName}
-              number={this.state.items.socialNumber}
+              text={this.state.user ? this.state.user.socialName : null}
+              number={this.state.user ? this.state.user.socialNumber : null}
             />
             <Text style={styles.h1}>Бусад банкны данс</Text>
             <Item
               icon="university"
               size={13}
-              text={this.state.items.otherName}
-              number={this.state.items.otherNumber}
+              text={this.state.user ? this.state.user.otherName : null}
+              number={this.state.user ? this.state.user.otherNumber : null}
             />
             <NonItem color="#1068FF" text="Банкны дансандаа мөнгөө авах" />
             <Text style={styles.h1}>Холболт</Text>
@@ -68,32 +71,33 @@ class InitScreen extends Component {
               icon="phone"
               size={13}
               text="Утасны дугаар"
-              number={this.state.items.telNumber}
+              number={this.state.user ? this.state.user.phone : null}
             />
             <Item
               icon="envelope"
               size={13}
               text="Имэйл"
-              number={this.state.items.emailNumber}
+              style={{width: 170}}
+              number={this.state.user ? this.state.user.email : null}
             />
             <Item
               icon="facebook"
               size={13}
               text="Facebook"
-              number={this.state.items.facebookNumber}
+              number={this.state.user ? this.state.user.facebookNumber : null}
             />
             <Item
               icon="twitter"
               size={13}
               text="Twitter"
-              number={this.state.items.twitterNumber}
+              number={this.state.user ? this.state.user.twitterNumber : null}
             />
             <Text style={styles.h1}>EBarimt</Text>
             <Item
               icon="edit"
               size={12}
               text="EBarimt холбох"
-              number={this.state.items.eBarimtNumber}
+              number={this.state.user ? this.state.user.eBarimtNumber : null}
             />
             <Text style={styles.h1}>Тохиргоо</Text>
             <Item
@@ -101,7 +105,7 @@ class InitScreen extends Component {
               icon="fingerprint"
               size={13}
               text="Хурууны хээ"
-              number={this.state.items.fingerPrint}
+              number={this.state.user ? this.state.user.fingerPrint : null}
             />
             <Item
               id="socialPin"
@@ -109,7 +113,7 @@ class InitScreen extends Component {
               size={13}
               style={{marginLeft: 17}}
               text="Social PIN"
-              number={this.state.items.socialPin}
+              number={this.state.user ? this.state.user.socialPin : null}
             />
             <NonItem
               color="#FF3B3B"

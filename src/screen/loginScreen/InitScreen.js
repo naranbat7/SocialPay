@@ -11,7 +11,8 @@ export default class InitScreen extends Component {
         <Logo />
         <Form
           type="Нэвтрэх"
-          logIn={() => console.log('hi ' + this.props.logIn)}
+          login={this.props.login}
+          setlogIn={this.props.setlogIn}
         />
         <View style={styles.SignUpTextCont}>
           <TouchableOpacity

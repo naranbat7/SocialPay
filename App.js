@@ -7,7 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Animated,
-  Easing,
+  AsyncStorage,
 } from 'react-native';
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
@@ -29,8 +29,6 @@ import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
 import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
-import CardAdd from './src/components/card/CardAdd';
-//import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const axios = require('axios');
 
@@ -40,7 +38,7 @@ export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      login: true,
+      login: false,
       notif: false,
       positionValue: new Animated.Value(-110),
       notificationDetails: {
@@ -48,15 +46,26 @@ export default class App extends Component {
         message: null,
         image: null,
       },
+      information: null,
     };
   }
 
-  logIn = () => {
-    this.setState({...this.state, login: true});
+  // * Login handler function depends on login state
+  logIn = async data => {
+    let value = true;
+    this.setState({information: data});
+    try {
+      await AsyncStorage.setItem('information', JSON.stringify(data));
+    } catch (error) {
+      console.log(error);
+      value = false;
+    }
+    this.setState({login: value});
   };
 
+  // * Firebase notification handler function can effect state
   isNotif = value => {
-    this.setState({...this.state, notif: value});
+    this.setState({notif: value});
     Animated.timing(this.state.positionValue, {
       toValue: value ? 0 : -110,
       duration: 400,
@@ -64,6 +73,7 @@ export default class App extends Component {
     }).start();
   };
 
+  // * Check firebase notification handler depends on firebase server
   notificationChecker = notification => {
     if (notification) {
       this.setState({
@@ -79,20 +89,21 @@ export default class App extends Component {
   };
 
   async componentDidMount() {
-    // axios
-    //   .get('http://10.0.2.2:3000/')
-    //   .then(response => {
-    //     console.log(Alert.alert('response'));
-    //   })
-    //   .catch(error => {
-    //     console.log('error');
-    //   });
+    AsyncStorage.getItem('information', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          this.setState({login: true});
+        }
+      }
+    });
 
+    // * Firebase notification main function start
     PushNotification.configure({
       onNotification: notification => {
         this.notificationChecker(notification);
       },
     });
+    // * Firebase notification main function end
   }
 
   /* Notification End */
@@ -112,7 +123,11 @@ export default class App extends Component {
       <View style={{flex: 1}}>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Login">
+              {props => (
+                <LoginScreen login={this.loginEBank} setlogIn={this.logIn} />
+              )}
+            </Stack.Screen>
             <Stack.Screen name="Signup" component={SignupScreen} />
           </Stack.Navigator>
         </NavigationContainer>
@@ -120,6 +135,9 @@ export default class App extends Component {
     );
   }
 }
+
+// * Notification Overlay start
+// TODO -- Make another component
 
 const NotificationView = props => {
   return (
@@ -183,6 +201,10 @@ const NotificationView = props => {
     </Animated.View>
   );
 };
+// * Notification Overlay End
+
+// * Bottom Tab Navigator Component Start
+// TODO -- Make another component
 
 const AppStack = createBottomTabNavigator(
   {
@@ -289,7 +311,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Card',
+    initialRouteName: 'Home',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,
@@ -319,5 +341,7 @@ const AppNavigator = createAppContainer(
     },
   ),
 );
+
+// * Bottom Tab Navigator Component End
 
 AppRegistry.registerComponent('myApp', () => Screens);

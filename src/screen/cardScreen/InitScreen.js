@@ -6,6 +6,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import {Card} from '../../components/card/Card';
 import {CONSTANTS} from '../../constants/Constants';
@@ -25,54 +26,34 @@ class InitScreen extends Component {
       cardAddVisible: false,
       virtualCardData: {
         bgImg: require('../../../assets/images/card-virtual.png'),
-        cardNumber: '541234861',
+        cardNumber: 'SocialPay карт',
         cardType: 'Virtual',
-        amount: '9,900',
         scaleX: new Animated.Value(0.8),
         scaleY: new Animated.Value(0.8),
         locationY: new Animated.Value(-10),
-        borderRadius: 10,
       },
-      cardData: [
-        {
-          bgImg: require('../../../assets/images/card-khan.jpg'),
-          cardNumber: '12345214',
-          amount: '9,900',
-          scaleX: new Animated.Value(0.66),
-          scaleY: new Animated.Value(0.66),
-          locationY: new Animated.Value(0),
-          borderRadius: 10,
-        },
-        {
-          bgImg: require('../../../assets/images/card-virtual.png'),
-          cardNumber: '98765432',
-          cardType: 'Virtual',
-          amount: '9,900',
-          scaleX: new Animated.Value(0.73),
-          scaleY: new Animated.Value(0.73),
-          locationY: new Animated.Value(0),
-          borderRadius: 10,
-        },
-        {
-          bgImg: require('../../../assets/images/card-carbon.jpg'),
-          cardNumber: '12331311',
-          amount: '9,900',
-          scaleX: new Animated.Value(0.8),
-          scaleY: new Animated.Value(0.8),
-          locationY: new Animated.Value(0),
-          borderRadius: 10,
-        },
-      ],
+      cardData: null,
     };
   }
 
-  componentDidMount() {}
+  async componentDidMount() {
+    AsyncStorage.getItem('information', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          this.setState({cardData: data.accounts});
+          this.setState({token: data.token});
+        } else console.log('result is null');
+      } else console.log('errs');
+    });
+  }
 
+  // * Card toggle function
   showCardAdd = value => {
     this.setState({...this.state, cardAddVisible: value});
   };
 
-  /*    Animation Start    */
+  // *    Animation Start
 
   showCardInfo = (item, value) => {
     Animated.timing(item.scaleX, {
@@ -95,7 +76,9 @@ class InitScreen extends Component {
 
     this.setState({...this.state, modalVisible: value});
   };
-  /*    Animation End    */
+  // *    Animation End
+
+  // TODO --> Make all component to individual
 
   render() {
     return (
@@ -105,6 +88,7 @@ class InitScreen extends Component {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
+        {/* // * Header Component start */}
         <View
           style={{
             paddingVertical: 20,
@@ -114,6 +98,7 @@ class InitScreen extends Component {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
+          {/* // * Header Title Component Start */}
           <View
             style={{
               flexDirection: 'row',
@@ -131,6 +116,8 @@ class InitScreen extends Component {
               Таны картууд
             </Text>
           </View>
+          {/* // * Header Title Component End */}
+
           <View
             style={{
               flexDirection: 'row',
@@ -150,6 +137,8 @@ class InitScreen extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        {/* // * Header Component end */}
+        {/* // * Card List Component Start */}
         <View
           style={{
             width: '100%',
@@ -197,41 +186,46 @@ class InitScreen extends Component {
             </Animated.View>
           </View>
           <View style={{flex: 1, translateY: -20}}>
-            {this.state.cardData.map((item, idx) => {
-              return (
-                <Animated.View
-                  key={idx}
-                  style={{
-                    translateY: -(height / 3.7) * idx - 10,
-                  }}>
-                  <View
+            {this.state.cardData &&
+              this.state.cardData.map((item, idx) => {
+                return (
+                  <Animated.View
+                    key={idx}
                     style={{
-                      alignItems: 'center',
+                      translateY: -(height / 3.7) * idx - 10,
                     }}>
-                    <TouchableOpacity activeOpacity={1}>
-                      <Card
-                        img={item.bgImg}
-                        cardNumber={item.cardNumber}
-                        cardType={item.cardType}
-                        amount={item.amount}
-                        style={{
-                          shadowColor: '#000000',
-                          shadowOffset: {width: 0, height: 0},
-                          shadowOpacity: 0.8,
-                          shadowRadius: 30,
-                          elevation: 5,
-                          scaleX: item.scaleX,
-                          scaleY: item.scaleY,
-                        }}
-                        borderRadius={item.borderRadius}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </Animated.View>
-              );
-            })}
+                    <View
+                      style={{
+                        alignItems: 'center',
+                      }}>
+                      <TouchableOpacity activeOpacity={1}>
+                        <Card
+                          index={idx}
+                          cardNumber={item}
+                          cardType={item.cardType}
+                          style={{
+                            shadowColor: '#000000',
+                            shadowOffset: {width: 0, height: 0},
+                            shadowOpacity: 0.8,
+                            shadowRadius: 30,
+                            elevation: 5,
+                            scaleX:
+                              0.8 -
+                              0.07 * (this.state.cardData.length - idx - 1),
+                            scaleY:
+                              0.8 -
+                              0.07 * (this.state.cardData.length - idx - 1),
+                          }}
+                          borderRadius={item.borderRadius}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </Animated.View>
+                );
+              })}
           </View>
         </View>
+        {/* // * Card List Component End */}
       </SafeAreaView>
     );
   }

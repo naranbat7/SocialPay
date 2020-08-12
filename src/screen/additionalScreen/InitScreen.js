@@ -123,11 +123,14 @@ class InitScreen extends Component {
 
   componentDidMount() {}
 
+  // TODO -- Make all components to Individual
+
   render() {
     let width = Dimensions.get('window').width;
     let height = Dimensions.get('window').height;
     return (
       <SafeAreaView style={{flex: 1}}>
+        {/* // * Header data component start */}
         <ScrollView
           style={{height: (height / 20) * 9, marginTop: 5}}
           horizontal={true}
@@ -151,6 +154,7 @@ class InitScreen extends Component {
             );
           })}
         </ScrollView>
+        {/* // * Header data component end // * Special service component start */}
         <View style={{height: (height / 20) * 4.8}}>
           <Text
             style={{
@@ -178,6 +182,7 @@ class InitScreen extends Component {
             })}
           </ScrollView>
         </View>
+        {/* // * Special service component end // * Other service component start */}
         <View style={{height: (height / 20) * 6.2}}>
           <Text
             style={{
@@ -261,6 +266,7 @@ class InitScreen extends Component {
             </OtherView>
           </ScrollView>
         </View>
+        {/* // * Other service component end */}
       </SafeAreaView>
     );
   }
