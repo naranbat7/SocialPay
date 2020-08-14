@@ -55,7 +55,7 @@ export default class Form extends Component {
               })
               .catch(error => {
                 console.log('Нэвтэрч чадсангүй');
-                //console.log(error);
+                console.log(error);
               });
           }}>
           <Text style={styles.buttonText}>{this.props.type}</Text>

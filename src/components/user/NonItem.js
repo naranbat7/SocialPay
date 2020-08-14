@@ -5,9 +5,7 @@ const NonItem = props => {
   return (
     <TouchableOpacity
       style={[styles.container, props.style]}
-      onPress={() => {
-        Alert.alert(props.text);
-      }}>
+      onPress={props.func}>
       <Text style={[styles.txt, {color: props.color}]}>{props.text}</Text>
     </TouchableOpacity>
   );

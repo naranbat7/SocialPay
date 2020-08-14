@@ -12,6 +12,7 @@ import Name from '../../components/user/Name';
 import Item from '../../components/user/Item';
 import NonItem from '../../components/user/NonItem';
 import {CONSTANTS} from '../../constants/Constants';
+import CardAdd from '../../components/user/CardAdd';
 
 class InitScreen extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class InitScreen extends Component {
       user: null,
       account: null,
       token: null,
+      cardAddVisible: true,
     };
   }
 
@@ -32,12 +34,14 @@ class InitScreen extends Component {
           this.setState({user: data.user});
           this.setState({account: data.accounts});
           this.setState({token: data.token});
-          console.log('result -> user parse: ' + data.user);
-          console.log(this.state.user);
         } else console.log('result is null');
       } else console.log('errs');
     });
   }
+
+  showCardAdd = async value => {
+    this.setState({...this.state, cardAddVisible: value});
+  };
 
   render() {
     let width = Dimensions.get('window').width;
@@ -57,7 +61,9 @@ class InitScreen extends Component {
               size={12}
               text={this.state.user ? this.state.user.socialName : null}
               number={this.state.user ? this.state.user.socialNumber : null}
+              func={() => this.showCardAdd(true)}
             />
+
             <Text style={styles.h1}>Бусад банкны данс</Text>
             <Item
               icon="university"
@@ -119,9 +125,23 @@ class InitScreen extends Component {
               color="#FF3B3B"
               text="Холболт салгах"
               style={{borderBottomWidth: 0}}
+              func={() => {
+                this.props.navigation.navigate('Login');
+                // this.props.setlogin;
+                AsyncStorage.removeItem('information', errs => {
+                  if (!errs) {
+                    console.log('Амжилттай устгалаа');
+                  } else console.log(errs);
+                });
+              }}
             />
           </View>
         </ScrollView>
+        <CardAdd
+          visible={this.state.cardAddVisible}
+          closeCardInfo={() => this.showCardAdd(false)}
+          accounts={this.state.account}
+        />
       </SafeAreaView>
     );
   }

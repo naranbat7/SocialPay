@@ -109,28 +109,15 @@ export default class App extends Component {
   /* Notification End */
 
   render() {
-    return this.state.login ? (
+    return (
       <View style={{flex: 1}}>
-        <AppNavigator />
+        <AppNavigator login={this.state.login} />
 
         <NotificationView
           close={() => this.isNotif(false)}
           data={this.state.notificationDetails}
           value={this.state}
         />
-      </View>
-    ) : (
-      <View style={{flex: 1}}>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Login">
-              {props => (
-                <LoginScreen login={this.loginEBank} setlogIn={this.logIn} />
-              )}
-            </Stack.Screen>
-            <Stack.Screen name="Signup" component={SignupScreen} />
-          </Stack.Navigator>
-        </NavigationContainer>
       </View>
     );
   }
@@ -311,7 +298,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Profile',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,
@@ -333,11 +320,11 @@ const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
       // AppLoading: AppLoadingScreen,
-      // Intro: IntoScreen,
+      Login: <LoginScreen setlogIn={props.login} />,
       App: AppStack,
     },
     {
-      initialRouteName: 'App',
+      initialRouteName: 'Login',
     },
   ),
 );

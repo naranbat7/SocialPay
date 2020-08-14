@@ -45,11 +45,7 @@ const Item = props => {
         </TouchableOpacity>
       ) : null}
       {props.number == null && props.id == undefined ? (
-        <TouchableOpacity
-          style={styles.right}
-          onPress={() => {
-            Alert.alert(props.text);
-          }}>
+        <TouchableOpacity style={styles.right} onPress={props.func}>
           <Text style={[styles.number, {marginLeft: 40, color: '#1068FF'}]}>
             Холбох
           </Text>

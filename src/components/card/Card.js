@@ -47,7 +47,6 @@ const Card = props => {
         </View>
         <View
           style={{
-            // position: 'absolute',
             alignItems: 'center',
             justifyContent: 'center',
             top: 40,

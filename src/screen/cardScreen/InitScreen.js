@@ -12,7 +12,6 @@ import {Card} from '../../components/card/Card';
 import {CONSTANTS} from '../../constants/Constants';
 import CardInfo from '../../components/card/CardInfo';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import CardAdd from '../../components/card/CardAdd';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -47,11 +46,6 @@ class InitScreen extends Component {
       } else console.log('errs');
     });
   }
-
-  // * Card toggle function
-  showCardAdd = value => {
-    this.setState({...this.state, cardAddVisible: value});
-  };
 
   // *    Animation Start
 
@@ -122,16 +116,8 @@ class InitScreen extends Component {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              marginRight: 20,
             }}>
-            <TouchableOpacity
-              style={{marginRight: 15}}
-              onPress={() => this.showCardAdd(true)}>
-              <Icon
-                name="plus-circle"
-                size={25}
-                color={CONSTANTS.color.light}
-              />
-            </TouchableOpacity>
             <TouchableOpacity>
               <Icon name="redo" size={20} color={CONSTANTS.color.light} />
             </TouchableOpacity>
@@ -178,10 +164,6 @@ class InitScreen extends Component {
                 closeCardInfo={() =>
                   this.showCardInfo(this.state.virtualCardData, false)
                 }
-              />
-              <CardAdd
-                visible={this.state.cardAddVisible}
-                closeCardInfo={() => this.showCardAdd(false)}
               />
             </Animated.View>
           </View>
