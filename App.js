@@ -12,9 +12,6 @@ import {
 import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
-import {createStackNavigator} from '@react-navigation/stack';
-import {NavigationContainer} from '@react-navigation/native';
-
 import PushNotification from 'react-native-push-notification';
 
 import LoginScreen from './src/screen/loginScreen/InitScreen';
@@ -30,15 +27,11 @@ import CardScreen from './src/screen/cardScreen/InitScreen';
 import ProfileScreen from './src/screen/profileScreen/InitScreen';
 import TransactionScreen from './src/screen/transactionScreen/InitScreen';
 
-const axios = require('axios');
-
-const Stack = createStackNavigator();
-
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      login: false,
+      login: true,
       notif: false,
       positionValue: new Animated.Value(-110),
       notificationDetails: {
@@ -51,7 +44,7 @@ export default class App extends Component {
   }
 
   // * Login handler function depends on login state
-  logIn = async data => {
+  logIn = async (data) => {
     let value = true;
     this.setState({information: data});
     try {
@@ -64,7 +57,7 @@ export default class App extends Component {
   };
 
   // * Firebase notification handler function can effect state
-  isNotif = value => {
+  isNotif = (value) => {
     this.setState({notif: value});
     Animated.timing(this.state.positionValue, {
       toValue: value ? 0 : -110,
@@ -74,7 +67,7 @@ export default class App extends Component {
   };
 
   // * Check firebase notification handler depends on firebase server
-  notificationChecker = notification => {
+  notificationChecker = (notification) => {
     if (notification) {
       this.setState({
         ...this.state,
@@ -99,8 +92,19 @@ export default class App extends Component {
 
     // * Firebase notification main function start
     PushNotification.configure({
-      onNotification: notification => {
+      onRegister: function (token) {
+        console.log('TOKEN:', token);
+      },
+
+      onNotification: (notification) => {
         this.notificationChecker(notification);
+      },
+
+      onAction: function (notification) {
+        console.log('ACTION:', notification.action);
+        console.log('NOTIFICATION:', notification);
+
+        // process the action
       },
     });
     // * Firebase notification main function end
@@ -109,7 +113,7 @@ export default class App extends Component {
   /* Notification End */
 
   render() {
-    return (
+    return this.state.login ? (
       <View style={{flex: 1}}>
         <AppNavigator login={this.state.login} />
 
@@ -119,6 +123,10 @@ export default class App extends Component {
           value={this.state}
         />
       </View>
+    ) : (
+      <View style={{flex: 1}}>
+        <LoginScreen setlogIn={this.logIn} />
+      </View>
     );
   }
 }
@@ -126,7 +134,7 @@ export default class App extends Component {
 // * Notification Overlay start
 // TODO -- Make another component
 
-const NotificationView = props => {
+const NotificationView = (props) => {
   return (
     <Animated.View
       style={{
@@ -320,11 +328,11 @@ const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
       // AppLoading: AppLoadingScreen,
-      Login: <LoginScreen setlogIn={props.login} />,
+      Login: LoginScreen,
       App: AppStack,
     },
     {
-      initialRouteName: 'Login',
+      initialRouteName: 'App',
     },
   ),
 );

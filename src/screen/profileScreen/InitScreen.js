@@ -22,7 +22,7 @@ class InitScreen extends Component {
       user: null,
       account: null,
       token: null,
-      cardAddVisible: true,
+      cardAddVisible: false,
     };
   }
 
