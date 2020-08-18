@@ -59,8 +59,8 @@ class InitScreen extends Component {
             <Item
               icon="credit-card"
               size={12}
-              text={this.state.user ? this.state.user.socialName : null}
-              number={this.state.user ? this.state.user.socialNumber : null}
+              text={this.state.user ? this.state.user.mainAccount : null}
+              number={this.state.user ? this.state.user.mainAccount : null}
               func={() => this.showCardAdd(true)}
             />
 
@@ -129,6 +129,11 @@ class InitScreen extends Component {
                 this.props.navigation.navigate('Login');
                 // this.props.setlogin;
                 AsyncStorage.removeItem('information', errs => {
+                  if (!errs) {
+                    console.log('Амжилттай устгалаа');
+                  } else console.log(errs);
+                });
+                AsyncStorage.removeItem('isPin', errs => {
                   if (!errs) {
                     console.log('Амжилттай устгалаа');
                   } else console.log(errs);

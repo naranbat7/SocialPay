@@ -13,6 +13,7 @@ export default class InitScreen extends Component {
           type="Нэвтрэх"
           login={this.props.login}
           setlogIn={this.props.setlogIn}
+          setLoadingTrue={this.props.setLoadingTrue}
         />
         <View style={styles.SignUpTextCont}>
           <TouchableOpacity

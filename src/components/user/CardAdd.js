@@ -8,7 +8,6 @@ import {
   View,
   Alert,
   AsyncStorage,
-  NativeModules,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 
@@ -166,7 +165,7 @@ export default class CardAdd extends Component {
                         {account: this.state.selectedAccount},
                         {
                           headers: {
-                            Authorization: 'Bearer ' + this.state.token + 'asd',
+                            Authorization: 'Bearer ' + this.state.token,
                             'Content-Type': 'application/json',
                           },
                         },
@@ -194,10 +193,9 @@ export default class CardAdd extends Component {
                               console.log('Амжилттай устгалаа');
                             } else console.log(errs);
                           });
-                          NativeModules.DevSettings.reload();
                         }
                       });
-                    this.props.closeCardInfo;
+                    this.props.closeCardInfo();
                   }}>
                   <Text
                     style={{

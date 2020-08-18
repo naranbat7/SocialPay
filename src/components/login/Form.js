@@ -40,6 +40,7 @@ export default class Form extends Component {
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
+            this.props.setLoadingTrue();
             axios
               .post(
                 'http://192.168.205.168:8050/api/info/auth',

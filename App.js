@@ -1,37 +1,21 @@
 import React, {Component} from 'react';
-import {
-  AppRegistry,
-  View,
-  Alert,
-  Image,
-  Text,
-  TouchableOpacity,
-  Animated,
-  AsyncStorage,
-} from 'react-native';
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {AppRegistry, View, Animated, AsyncStorage} from 'react-native';
 
 import PushNotification from 'react-native-push-notification';
 
 import LoginScreen from './src/screen/loginScreen/InitScreen';
-import SignupScreen from './src/screen/signupScreen/InitScreen';
+import NotificationView from './src/components/NotificationView';
+import AppNavigator from './src/components/AppNavigator';
+import SplashScreen from './src/screen/SplashScreen';
+import SocialPinConnect from './src/screen/SocialPinConnect';
 
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
-
-import {CONSTANTS} from './src/constants/Constants';
-
-import HomeScreen from './src/screen/mainScreen/InitScreen';
-import AdditionalScreen from './src/screen/additionalScreen/InitScreen';
-import CardScreen from './src/screen/cardScreen/InitScreen';
-import ProfileScreen from './src/screen/profileScreen/InitScreen';
-import TransactionScreen from './src/screen/transactionScreen/InitScreen';
+const axios = require('axios');
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
-      login: true,
+      login: false,
       notif: false,
       positionValue: new Animated.Value(-110),
       notificationDetails: {
@@ -40,11 +24,15 @@ export default class App extends Component {
         image: null,
       },
       information: null,
+      token: null,
+      loading: true,
+      check: true,
+      showSocialPin: true,
     };
   }
 
   // * Login handler function depends on login state
-  logIn = async (data) => {
+  logIn = async data => {
     let value = true;
     this.setState({information: data});
     try {
@@ -53,11 +41,37 @@ export default class App extends Component {
       console.log(error);
       value = false;
     }
-    this.setState({login: value});
+    this.setState({login: value, showSocialPin: false, loading: false});
+  };
+
+  setLoadingTrue = () => {
+    this.setState({loading: true});
+  };
+
+  tokenSender = token => {
+    axios
+      .put(
+        'http://192.168.205.168:8050/api/info/user/token',
+        {token: token.os},
+        {
+          headers: {
+            Authorization: 'Bearer ' + this.state.token,
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+      .then(response => {
+        console.log('Амжилттай token илгээлээ');
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.log('Token илгээхэд алдаа гарлаа');
+        console.log(error);
+      });
   };
 
   // * Firebase notification handler function can effect state
-  isNotif = (value) => {
+  isNotif = value => {
     this.setState({notif: value});
     Animated.timing(this.state.positionValue, {
       toValue: value ? 0 : -110,
@@ -67,7 +81,7 @@ export default class App extends Component {
   };
 
   // * Check firebase notification handler depends on firebase server
-  notificationChecker = (notification) => {
+  notificationChecker = notification => {
     if (notification) {
       this.setState({
         ...this.state,
@@ -82,25 +96,44 @@ export default class App extends Component {
   };
 
   async componentDidMount() {
-    AsyncStorage.getItem('information', (errs, result) => {
+    AsyncStorage.getItem('isPin', (errs, result) => {
       if (!errs) {
         if (result !== null) {
-          this.setState({login: true});
+          let data = JSON.parse(result);
+          if (data) {
+            this.setState({showSocialPin: false});
+          }
         }
       }
     });
 
+    AsyncStorage.getItem('information', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          this.setState({token: data.token});
+          if (data.user.socialPin) {
+            this.setState({showSocialPin: false});
+          }
+          this.setState({
+            login: true,
+          });
+        }
+      }
+      this.setState({loading: false});
+    });
+
     // * Firebase notification main function start
     PushNotification.configure({
-      onRegister: function (token) {
-        console.log('TOKEN:', token);
+      onRegister: token => {
+        this.tokenSender(token);
       },
 
-      onNotification: (notification) => {
+      onNotification: notification => {
         this.notificationChecker(notification);
       },
 
-      onAction: function (notification) {
+      onAction: function(notification) {
         console.log('ACTION:', notification.action);
         console.log('NOTIFICATION:', notification);
 
@@ -113,230 +146,33 @@ export default class App extends Component {
   /* Notification End */
 
   render() {
-    return this.state.login ? (
+    return this.state.loading ? (
+      <SplashScreen />
+    ) : this.state.login ? (
       <View style={{flex: 1}}>
-        <AppNavigator login={this.state.login} />
+        {this.state.showSocialPin ? (
+          <SocialPinConnect />
+        ) : (
+          <View style={{flex: 1}}>
+            <AppNavigator />
 
-        <NotificationView
-          close={() => this.isNotif(false)}
-          data={this.state.notificationDetails}
-          value={this.state}
-        />
+            <NotificationView
+              close={() => this.isNotif(false)}
+              data={this.state.notificationDetails}
+              value={this.state}
+            />
+          </View>
+        )}
       </View>
     ) : (
       <View style={{flex: 1}}>
-        <LoginScreen setlogIn={this.logIn} />
+        <LoginScreen
+          setlogIn={this.logIn}
+          setLoadingTrue={this.setLoadingTrue}
+        />
       </View>
     );
   }
 }
-
-// * Notification Overlay start
-// TODO -- Make another component
-
-const NotificationView = (props) => {
-  return (
-    <Animated.View
-      style={{
-        width: '96%',
-        alignSelf: 'center',
-        position: 'absolute',
-        backgroundColor: '#fff',
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 0},
-        shadowOpacity: 0.8,
-        shadowRadius: 30,
-        elevation: 5,
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        height: 100,
-        display: 'none',
-        translateY: props.value.positionValue,
-      }}>
-      <View style={{height: '75%', flexDirection: 'row'}}>
-        <View style={{width: '80%'}}>
-          <Text style={{color: '#000', fontSize: 16, fontWeight: 'bold'}}>
-            {props.data.title}
-          </Text>
-          <Text style={{color: '#000', fontSize: 14}}>
-            {props.data.message}
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            marginTop: 10,
-          }}>
-          <Image
-            source={{uri: props.data.image}}
-            style={{
-              position: 'absolute',
-              height: 35,
-              width: 35,
-            }}
-          />
-        </View>
-      </View>
-      <TouchableOpacity
-        style={{flex: 1, justifyContent: 'center'}}
-        onPress={props.close}>
-        <Text
-          style={{
-            color: '#2d88ff',
-            fontSize: 16,
-            marginRight: 15,
-            textAlign: 'right',
-          }}>
-          Хаах
-        </Text>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-// * Notification Overlay End
-
-// * Bottom Tab Navigator Component Start
-// TODO -- Make another component
-
-const AppStack = createBottomTabNavigator(
-  {
-    Profile: {
-      screen: ProfileScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="user"
-              size={25}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="home"
-              size={30}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    Transaction: {
-      screen: TransactionScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="angle-double-up"
-              size={30}
-              style={[
-                {
-                  backgroundColor: '#2d88ff',
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  paddingLeft: 15,
-                  paddingRight: 15,
-                  borderRadius: 8,
-                  fontWeight: 100,
-                  color: '#fff',
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    Card: {
-      screen: CardScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="credit-card"
-              size={25}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-    Additional: {
-      screen: AdditionalScreen,
-      navigationOptions: {
-        tabBarIcon: ({tintColor, focused}) => (
-          <View>
-            <Icon
-              name="bars"
-              size={25}
-              style={[
-                {
-                  fontWeight: 'bold',
-                  color: tintColor,
-                },
-              ]}
-            />
-          </View>
-        ),
-      },
-    },
-  },
-  {
-    initialRouteName: 'Profile',
-    tabBarOptions: {
-      activeTintColor: CONSTANTS.color.dark,
-      showLabel: false,
-      style: {
-        height: 40,
-        backgroundColor: '#fff',
-        width: '100%',
-        shadowColor: '#000000',
-        shadowOffset: {width: 0, height: 0},
-        shadowOpacity: 0.8,
-        shadowRadius: 30,
-        elevation: 5,
-      },
-    },
-  },
-);
-
-const AppNavigator = createAppContainer(
-  createSwitchNavigator(
-    {
-      // AppLoading: AppLoadingScreen,
-      Login: LoginScreen,
-      App: AppStack,
-    },
-    {
-      initialRouteName: 'App',
-    },
-  ),
-);
-
-// * Bottom Tab Navigator Component End
 
 AppRegistry.registerComponent('myApp', () => Screens);

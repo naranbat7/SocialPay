@@ -13,8 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {CONSTANTS} from '../../constants/Constants';
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+const {width, height} = Dimensions.get('window');
 
 class CardInfo extends Component {
   constructor(props) {

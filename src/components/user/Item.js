@@ -6,12 +6,22 @@ import {
   TouchableOpacity,
   Alert,
   CheckBox,
+  Modal,
 } from 'react-native';
+import SocialPinChecker from '../../screen/SocialPinChecker';
+import SocialPinConnect from '../../screen/SocialPinConnect';
 import Icon from 'react-native-vector-icons/dist/FontAwesome5';
 import {CONSTANTS} from '../../constants/Constants';
 
 const Item = props => {
   const [isSelected, setSelected] = useState(false);
+  const [isPinChecker, setPinChecker] = useState(false);
+  const [isPinConnect, setPinConnect] = useState(false);
+
+  const showPinConnect = () => {
+    setPinConnect(true);
+    setPinChecker(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -39,7 +49,7 @@ const Item = props => {
         <TouchableOpacity
           style={[styles.right, {width: 20, backgroundColor: '#fff'}]}
           onPress={() => {
-            Alert.alert(props.text);
+            setPinChecker(true);
           }}>
           <Icon name="chevron-right" solid size={15} style={styles.chevron} />
         </TouchableOpacity>
@@ -55,14 +65,18 @@ const Item = props => {
       {props.number != null && props.id == undefined ? (
         <TouchableOpacity
           style={[styles.right, props.style]}
-          onPress={() => {
-            Alert.alert(props.text);
-          }}>
+          onPress={props.func}>
           <Icon name="check-circle" solid size={15} style={styles.check} />
           <Text style={styles.number}>{props.number}</Text>
           <Icon name="chevron-right" solid size={15} style={styles.chevron} />
         </TouchableOpacity>
       ) : null}
+      <Modal visible={isPinChecker} animationType="slide">
+        <SocialPinChecker ifCorrect={() => showPinConnect()} />
+      </Modal>
+      <Modal visible={isPinConnect} animationType="slide">
+        <SocialPinConnect then={() => setPinConnect(false)} />
+      </Modal>
     </View>
   );
 };
