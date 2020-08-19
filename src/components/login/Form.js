@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
   Dimensions,
   View,
@@ -10,61 +10,60 @@ import {
 
 const axios = require('axios');
 
-export default class Form extends Component {
-  render() {
-    let width = Dimensions.get('window').width;
-    let height = Dimensions.get('window').height;
-    return (
-      <View style={styles.container}>
-        {/* <View style={styles.container1}>
-          <TouchableOpacity style={styles.EntButton}>
-            <Text style={styles.buttonText}> Нэвтрэх </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.EntButton}>
-            <Text style={styles.buttonText}> Бүртгүүлэх </Text>
-          </TouchableOpacity>
-        </View> */}
-        <TextInput
-          style={styles.inputBox}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Username"
-          placeholderTextColor="#000000"
-        />
-        <TextInput
-          style={styles.inputBox}
-          underlineColorAndroid="rgba(0,0,0,0)"
-          placeholder="Password"
-          secureTextEntry={true}
-          placeholderTextColor="#000000"
-        />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            this.props.setLoadingTrue();
-            axios
-              .post(
-                'http://192.168.205.168:8050/api/info/auth',
-                {password: '86960036', username: 'user1144'},
-                {
-                  'Content-Type': 'application/json',
-                },
-              )
-              .then(response => {
-                console.log('Амжилттай нэвтэрлээ');
-                console.log(response.data);
-                this.props.setlogIn(response.data);
-              })
-              .catch(error => {
-                console.log('Нэвтэрч чадсангүй');
-                console.log(error);
-              });
-          }}>
-          <Text style={styles.buttonText}>{this.props.type}</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
-}
+const Form = props => {
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.inputBox}
+        underlineColorAndroid="rgba(0,0,0,0)"
+        placeholder="Username"
+        placeholderTextColor="#000000"
+        value={username}
+        onChangeText={setUsername}
+      />
+      <TextInput
+        style={styles.inputBox}
+        underlineColorAndroid="rgba(0,0,0,0)"
+        placeholder="Password"
+        secureTextEntry={true}
+        placeholderTextColor="#000000"
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          props.setLoadingTrue();
+          axios
+            .post(
+              'http://192.168.205.168:8050/api/info/auth',
+              {password: `${password}`, username: `${username}`},
+              {
+                'Content-Type': 'application/json',
+              },
+            )
+            .then(response => {
+              console.log('Амжилттай нэвтэрлээ');
+              console.log(response.data);
+              props.setlogIn(response.data);
+            })
+            .catch(error => {
+              console.log('Нэвтэрч чадсангүй');
+              props.setlogIn('error');
+              console.log(error);
+            });
+        }}>
+        <Text style={styles.buttonText}>{props.type}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default Form;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

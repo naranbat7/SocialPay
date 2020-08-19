@@ -13,6 +13,8 @@ import {Tran} from '../../components/home/Tran';
 import {ScrollView} from 'react-native-gesture-handler';
 import {CONSTANTS} from '../../constants/Constants';
 
+const axios = require('axios');
+
 let width = Dimensions.get('window').width;
 let height = Dimensions.get('window').height;
 let tranHeight = height - 180 - 105;
@@ -23,33 +25,9 @@ class InitScreen extends Component {
 
     this.state = {
       cardData: null,
-      transactionData: [
-        {
-          date: '2020-07-12',
-          amount: '-1,900.00',
-          description: 'TRF=000311100818-949618XXXXXX4493ATM1216>UB',
-        },
-        {
-          date: '2020-07-13',
-          amount: '+15,600.00',
-          description: 'TRF=000372300818-949618XXXXXX4493ATM1216>UB',
-        },
-        {
-          date: '2020-07-14',
-          amount: '-11,200.00',
-          description: 'TRF=000312300818-949618XXXXXX4493ATM1216>UB',
-        },
-        {
-          date: '2020-07-15',
-          amount: '+10,000.00',
-          description: 'TRF=000300000818-949618XXXXXX4493ATM1216>UB',
-        },
-        {
-          date: '2020-07-16',
-          amount: '-3,500.00',
-          description: 'TRF=000356400818-949618XXXXXX4493ATM1216>UB',
-        },
-      ],
+      mainAccount: null,
+      token: null,
+      transactionData: null,
       cardPerX: 100,
     };
   }
@@ -59,8 +37,27 @@ class InitScreen extends Component {
       if (!errs) {
         if (result !== null) {
           let data = JSON.parse(result);
-          this.setState({cardData: data.accounts});
-          this.setState({token: data.token});
+          axios
+            .get(
+              'http://192.168.205.168:8050/api/transaction/statement?page=0&size=10',
+              {
+                headers: {
+                  Authorization: 'Bearer ' + data.token,
+                  'Content-Type': 'application/json',
+                },
+              },
+            )
+            .then(response => {
+              this.setState({transactionData: response.data.content});
+            })
+            .catch(error => {
+              console.log('Transaction' + error);
+            });
+          this.setState({
+            cardData: data.accounts,
+            token: data.token,
+            mainAccount: data.user.mainAccount,
+          });
         } else console.log('result is null');
       } else console.log('errs');
     });
@@ -76,12 +73,34 @@ class InitScreen extends Component {
           snapToInterval={width * 0.785}
           snapToAlignment={'center'}
           showsHorizontalScrollIndicator={false}>
+          {this.state.mainAccount && (
+            <View
+              style={{
+                width: width * 0.7,
+                paddingTop: 20,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 55,
+                marginRight: 15,
+              }}>
+              <Card
+                index={0}
+                token={this.state.token}
+                isMainAccount={true}
+                img={this.state.mainAccount.bgImg}
+                cardNumber={this.state.mainAccount}
+                cardType={this.state.mainAccount.cardType}
+                amount={this.state.mainAccount.amount}
+              />
+            </View>
+          )}
           {this.state.cardData &&
             this.state.cardData.map((item, idx) => {
               let marginLeft, marginRight;
-              if (idx == 0) {
-                marginLeft = 55;
+              if (idx == 0 && this.state.mainAccount == null) {
                 marginRight = 15;
+                marginLeft = 55;
               } else if (
                 idx == (this.state.cardData && this.state.cardData.length - 1)
               ) {
@@ -117,16 +136,17 @@ class InitScreen extends Component {
         <View style={Styles.tran}>
           <Text style={Styles.tranTitle}>Сүүлийн гүйлгээ</Text>
           <ScrollView bounces={false} style={Styles.tranScroll}>
-            {this.state.transactionData.map((item, idx) => {
-              return (
-                <Tran
-                  key={idx}
-                  date={item.date}
-                  amount={item.amount}
-                  description={item.description}
-                />
-              );
-            })}
+            {this.state.transactionData &&
+              this.state.transactionData.map((item, idx) => {
+                return (
+                  <Tran
+                    key={idx}
+                    date={item.createdDate}
+                    amount={item.amount}
+                    description={item.invoice}
+                  />
+                );
+              })}
           </ScrollView>
         </View>
       </SafeAreaView>

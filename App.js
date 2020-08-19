@@ -33,41 +33,99 @@ export default class App extends Component {
 
   // * Login handler function depends on login state
   logIn = async data => {
-    let value = true;
-    this.setState({information: data});
-    try {
-      await AsyncStorage.setItem('information', JSON.stringify(data));
-    } catch (error) {
-      console.log(error);
-      value = false;
+    if (data != 'error') {
+      let value = true;
+      this.setState({information: data});
+      try {
+        await AsyncStorage.setItem('information', JSON.stringify(data));
+      } catch (error) {
+        console.log(error);
+        value = false;
+      }
+      this.setState({login: value, showSocialPin: false, loading: false});
+    } else {
+      this.setState({loading: false});
     }
-    this.setState({login: value, showSocialPin: false, loading: false});
   };
 
   setLoadingTrue = () => {
     this.setState({loading: true});
   };
 
+  isTokenChanged = token => {
+    AsyncStorage.getItem('deviceToken', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          if (data == token) {
+            console.log('Device token not changed');
+            return false;
+          } else {
+            console.log('Device token changed');
+            return true;
+          }
+        } else {
+          console.log('Device token not found');
+          return true;
+        }
+      } else {
+        console.log('Device token error');
+        return true;
+      }
+    });
+  };
+
   tokenSender = token => {
-    axios
-      .put(
-        'http://192.168.205.168:8050/api/info/user/token',
-        {token: token.os},
-        {
-          headers: {
-            Authorization: 'Bearer ' + this.state.token,
-            'Content-Type': 'application/json',
+    console.log(token.token);
+    let isTokenChanged = true;
+    AsyncStorage.getItem('deviceToken', (errs, result) => {
+      if (!errs) {
+        if (result !== null) {
+          let data = JSON.parse(result);
+          if (data == token) {
+            console.log('Device token not changed');
+            isTokenChanged = false;
+          } else {
+            console.log('Device token changed');
+          }
+        } else {
+          console.log('Device token not found');
+        }
+      } else {
+        console.log('Device token error');
+      }
+    });
+    if (isTokenChanged) {
+      console.log('Token is sending...');
+      axios
+        .put(
+          'http://192.168.205.168:8050/api/info/user/token',
+          {token: token.token},
+          {
+            headers: {
+              Authorization: 'Bearer ' + this.state.token,
+              'Content-Type': 'application/json',
+            },
           },
-        },
-      )
-      .then(response => {
-        console.log('Амжилттай token илгээлээ');
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log('Token илгээхэд алдаа гарлаа');
-        console.log(error);
-      });
+        )
+        .then(response => {
+          console.log('Амжилттай token илгээлээ');
+          console.log(response.data);
+          try {
+            AsyncStorage.setItem('deviceToken', JSON.stringify(token.token));
+            console.log('Token stored successfully');
+          } catch (error) {
+            console.log(error);
+            console.log('Token could not stored successfully');
+          }
+        })
+        .catch(error => {
+          console.log('Token илгээхэд алдаа гарлаа');
+          console.log(error);
+        });
+    } else {
+      console.log('Token not changed');
+    }
   };
 
   // * Firebase notification handler function can effect state
