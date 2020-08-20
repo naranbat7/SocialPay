@@ -9,13 +9,11 @@ import {
   Modal,
   AsyncStorage,
   Animated,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import InvoiceSender from '../InvoiceSender';
 import TransactionSender from '../TransactionSender';
-
-const axios = require('axios');
+import InvoiceShow from '../InvoiceShow';
 
 const buttonData = [
   '1',
@@ -45,6 +43,7 @@ export class InitScreen extends Component {
       money: 0,
       transactionVisible: false,
       invoiceVisible: false,
+      showInvoiceList: true,
       isPinCorrect: null,
       token: null,
       transY: new Animated.Value(0),
@@ -113,6 +112,10 @@ export class InitScreen extends Component {
     }
   };
 
+  showInvoiceList = value => {
+    this.setState({showInvoiceList: value});
+  };
+
   showInvoice = value => {
     if (value) {
       if (this.state.money < 100) {
@@ -177,7 +180,7 @@ export class InitScreen extends Component {
       <SafeAreaView style={css.container}>
         <View style={css.topContainer}>
           <TouchableOpacity
-            onPress={() => console.log('Show Invoice')}
+            onPress={() => this.showInvoiceList(true)}
             style={[
               top.modalTransaction,
               {transform: [{translateX: this.state.transY}]},
@@ -240,6 +243,11 @@ export class InitScreen extends Component {
           </TouchableOpacity>
         </View>
         <Loader modalVisible={this.state.loaderVisible} />
+        <ChangeScreenShowInvoice
+          modalVisible={this.state.showInvoiceList}
+          showModal={() => this.showInvoiceList(false)}
+          token={this.state.token}
+        />
         <ChangeScreenTransaction
           modalVisible={this.state.transactionVisible}
           showModal={() => this.showTransaction(false)}
@@ -266,6 +274,18 @@ export class InitScreen extends Component {
     );
   }
 }
+
+const ChangeScreenShowInvoice = props => {
+  return (
+    <Modal visible={props.modalVisible} transparent={true}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{flex: 1, width: '100%'}}>
+          <InvoiceShow showModal={props.showModal} token={props.token}/>
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
 const ChangeScreenTransaction = props => {
   return (
