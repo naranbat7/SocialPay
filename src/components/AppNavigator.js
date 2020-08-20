@@ -119,7 +119,7 @@ const AppStack = createBottomTabNavigator(
     },
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Transaction',
     tabBarOptions: {
       activeTintColor: CONSTANTS.color.dark,
       showLabel: false,

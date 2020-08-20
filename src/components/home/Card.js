@@ -145,22 +145,19 @@ const ShowMoney = props => {
         <View style={{backgroundColor: '#fff', padding: 20}}>
           <View style={{marginHorizontal: 10}}>
             <Text style={{fontSize: 16}}>
-              Таны <Text style={{color: '#66b00b'}}>{props.account}</Text>{' '}
-              дугаартай дансны
+              Таны {props.account} дугаартай дансны
             </Text>
-            <Text style={{fontSize: 16}}>
-              Үлдэгдэл:{' '}
-              {props.money ? (
-                <Text style={{color: '#66b00b'}}>
-                  {parseFloat(props.money)
-                    .toFixed(2)
-                    .replace(/\d(?=(\d{3})+\.)/g, '$&,')}{' '}
-                  ₮
-                </Text>
-              ) : (
-                <ActivityIndicator />
-              )}
-            </Text>
+            {props.money ? (
+              <Text style={{fontSize: 16}}>
+                Үлдэгдэл:{' '}
+                {parseFloat(props.money)
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')}{' '}
+                ₮
+              </Text>
+            ) : (
+              <ActivityIndicator />
+            )}
           </View>
           <TouchableOpacity
             style={{marginLeft: 240}}
