@@ -8,9 +8,11 @@ import {
   Dimensions,
   ActivityIndicator,
   Modal,
+  ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {ScrollView} from 'react-native-gesture-handler';
+import InvoiceResult from '../components/transaction/InvoiceResult';
+import InvoicePayResult from '../components/transaction/InvoicePayResult';
 
 const axios = require('axios');
 
@@ -25,11 +27,12 @@ export class InvoiceShow extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isPay: false,
+      isPay: true,
       loading: true,
       invoices: [],
       sentInvoices: [],
       modalVisible: false,
+      modalPayVisible: false,
       resultIndex: 0,
       resultData: {amount: 0},
     };
@@ -58,9 +61,14 @@ export class InvoiceShow extends Component {
   }
 
   showResult = value => [this.setState({modalVisible: value})];
+  showPayResult = value => [this.setState({modalPayVisible: value})];
 
   changeIndex = value => {
     this.setState({modalVisible: true, resultData: value});
+  };
+
+  changePayIndex = value => {
+    this.setState({modalPayVisible: true, resultData: value});
   };
 
   render() {
@@ -107,17 +115,17 @@ export class InvoiceShow extends Component {
             {this.state.loading ? (
               <ActivityIndicator />
             ) : this.state.isPay ? (
-              <PayList
+              <PayList1
                 data={this.state.invoices}
-                modalVisible={this.state.modalVisible}
-                showResult={() => this.showResult(false)}
-                openResult={() => this.showResult(true)}
+                modalVisible={this.state.modalPayVisible}
+                closeResult={() => this.showPayResult(false)}
+                openResult={() => this.showPayResult(true)}
                 resultIndex={this.state.resultIndex}
-                changeIndex={this.changeIndex}
+                changeIndex={this.changePayIndex}
                 resultData={this.state.resultData}
               />
             ) : (
-              <PayList
+              <PayList2
                 data={this.state.sentInvoices}
                 modalVisible={this.state.modalVisible}
                 closeResult={() => this.showResult(false)}
@@ -134,7 +142,7 @@ export class InvoiceShow extends Component {
   }
 }
 
-const PayList = props => {
+const PayList1 = props => {
   return (
     <ScrollView>
       {props.data.length > 0 ? (
@@ -168,7 +176,7 @@ const PayList = props => {
           Өгөгдөл хоосон байна
         </Text>
       )}
-      <Result
+      <InvoicePayResult
         modalVisible={props.modalVisible}
         closeResult={props.closeResult}
         data={props.resultData}
@@ -178,191 +186,47 @@ const PayList = props => {
   );
 };
 
-const Result = props => {
+const PayList2 = props => {
   return (
-    <Modal visible={props.modalVisible} transparent={true}>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          width: '100%',
-          backgroundColor: 'rgba(0,0,0,0.3)',
-        }}>
-        <View
-          style={{
-            width: 300,
-            height: 400,
-            backgroundColor: '#fff',
-            borderRadius: 10,
-            justifyContent: 'center',
-          }}>
-          <Text
-            style={{
-              fontSize: 18,
-              color: '#2d88ff',
-              textAlign: 'center',
-              textTransform: 'uppercase',
-              fontWeight: 'bold',
-            }}>
-            Нэхэмжлэл
-          </Text>
-          <Text
-            style={{
-              fontSize: 14,
-              color: 'rgba(0,0,0,0.5)',
-              textAlign: 'center',
-              marginTop: 7,
-              marginBottom: 15,
-            }}>
-            {props.data.createdDate}
-          </Text>
-          <View
-            style={{
-              width: '100%',
-              flexDirection: 'row',
-              marginVertical: 20,
-            }}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#1dd1a1',
-                  textTransform: 'uppercase',
-                }}>
-                Нэхэмжлэгч
-              </Text>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 8,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                    color: 'rgba(0,0,0,0.5)',
-                  }}>
-                  Дугаар:{' '}
-                </Text>
-                <Text style={{fontSize: 18}}>{props.data.creditPhone}</Text>
-              </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 8,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                    color: 'rgba(0,0,0,0.5)',
-                  }}>
-                  Данс:{' '}
-                </Text>
-                <Text style={{fontSize: 18}}>{props.data.creditAccount}</Text>
-              </View>
-            </View>
-            <View
-              style={{
-                width: 50,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon name="angle-double-left" size={30} color="#2d88ff" />
-            </View>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#ff6b6b',
-                  textTransform: 'uppercase',
-                }}>
-                Төлбөр хийх
-              </Text>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 8,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                    color: 'rgba(0,0,0,0.5)',
-                  }}>
-                  Дугаар:{' '}
-                </Text>
-                <Text style={{fontSize: 18}}>{props.data.debitPhone}</Text>
-              </View>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginVertical: 8,
-                }}>
-                <Text
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 'bold',
-                    textTransform: 'uppercase',
-                    color: 'rgba(0,0,0,0.5)',
-                  }}>
-                  Данс:{' '}
-                </Text>
-                <Text style={{fontSize: 18}}>{props.data.debitAccount}</Text>
-              </View>
-            </View>
-          </View>
-          <View>
-            <Text
-              style={{
-                textAlign: 'center',
-                marginVertical: 20,
-                fontSize: 24,
-                color: '#ff6b6b',
-              }}>
-              {props.data.amount.format()} ₮
-            </Text>
-          </View>
-          <View style={{justifyContent: 'center', alignItems: 'center'}}>
+    <ScrollView>
+      {props.data.length > 0 ? (
+        props.data.map((item, idx) => {
+          return (
             <TouchableOpacity
-              onPress={props.closeResult}
-              style={{
-                backgroundColor: '#0abde3',
-                width: 100,
-                borderRadius: 5,
-              }}>
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: '#fff',
-                  paddingVertical: 7,
-                }}>
-                БУЦАХ
-              </Text>
+              key={idx}
+              style={css.invoiceList}
+              onPress={() => props.changeIndex(item)}>
+              <View style={css.invoiceListContent}>
+                <Text style={{fontSize: 12, color: 'rgba(0,0,0,0.5)'}}>
+                  {item.createdDate}
+                </Text>
+                <Text style={{fontSize: 14, marginTop: 5}}>
+                  {item.debitPhone}
+                </Text>
+              </View>
+              <View style={css.amountContainer}>
+                <Text style={css.amount}>{item.amount.format()} ₮</Text>
+              </View>
+              <Icon
+                name="angle-right"
+                size={20}
+                color="rgba(45, 136, 255, 0.7)"
+              />
             </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
+          );
+        })
+      ) : (
+        <Text style={{marginTop: 10, textAlign: 'center'}}>
+          Өгөгдөл хоосон байна
+        </Text>
+      )}
+      <InvoiceResult
+        modalVisible={props.modalVisible}
+        closeResult={props.closeResult}
+        data={props.resultData}
+        resultIndex={props.resultIndex}
+      />
+    </ScrollView>
   );
 };
 
