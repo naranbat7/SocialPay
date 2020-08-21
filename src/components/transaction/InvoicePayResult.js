@@ -2,7 +2,62 @@ import React from 'react';
 import {Text, View, TouchableOpacity, Modal} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
+const axios = require('axios');
+
 const InvoicePayResult = props => {
+  const invoiceCancel = () => {
+    console.log(props.data);
+    axios
+      .post(
+        'http://192.168.205.168:8050/api/transaction/invoice/reject',
+        {
+          id: props.data.id,
+          invoiceNumber: props.data.invoiceNumber,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + props.token,
+          },
+        },
+      )
+      .then(response => {
+        props.answerTrue();
+      })
+      .catch(err => {
+        props.answerFalse();
+        console.log(err);
+      });
+    props.deletePayResult();
+  };
+
+  const invoicePay = () => {
+    console.log(props.data);
+    axios
+      .post(
+        'http://192.168.205.168:8050/api/transaction/invoice/pay?language=mn',
+        {
+          id: props.data.id,
+          invoiceNumber: props.data.invoiceNumber,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + props.token,
+          },
+        },
+      )
+      .then(response => {
+        props.answerTrue();
+      })
+      .catch(err => {
+        console.log('Invoice Pay Error');
+        props.answerFalse();
+        console.log(err);
+      });
+    props.deletePayResult();
+  };
+
   return (
     <Modal visible={props.modalVisible} transparent={true}>
       <View
@@ -174,7 +229,7 @@ const InvoicePayResult = props => {
               flexWrap: 'wrap',
             }}>
             <TouchableOpacity
-              onPress={props.closeResult}
+              onPress={() => invoicePay()}
               style={{
                 backgroundColor: '#1dd1a1',
                 width: 100,
@@ -191,7 +246,7 @@ const InvoicePayResult = props => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={props.closeResult}
+              onPress={() => invoiceCancel()}
               style={{
                 backgroundColor: '#ff6b6b',
                 width: 100,

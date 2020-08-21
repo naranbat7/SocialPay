@@ -43,7 +43,7 @@ export class InitScreen extends Component {
       money: 0,
       transactionVisible: false,
       invoiceVisible: false,
-      showInvoiceList: true,
+      showInvoiceList: false,
       isPinCorrect: null,
       token: null,
       transY: new Animated.Value(0),
@@ -135,21 +135,21 @@ export class InitScreen extends Component {
         }));
       }
     } else if (item == '000') {
-      if (this.state.money < 10000) {
+      if (this.state.money < 1000) {
         this.setState(prevState => ({
           money: prevState.money * 1000,
         }));
-      } else if (this.state.money < 100000) {
+      } else if (this.state.money < 10000) {
         this.setState(prevState => ({
           money: prevState.money * 100,
         }));
-      } else if (this.state.money < 1000000) {
+      } else if (this.state.money < 100000) {
         this.setState(prevState => ({
           money: prevState.money * 10,
         }));
       }
     } else {
-      if (this.state.money < 1000000) {
+      if (this.state.money < 100000) {
         this.setState(prevState => ({
           money: prevState.money * 10 + parseInt(item),
         }));
@@ -280,7 +280,7 @@ const ChangeScreenShowInvoice = props => {
     <Modal visible={props.modalVisible} transparent={true}>
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <View style={{flex: 1, width: '100%'}}>
-          <InvoiceShow showModal={props.showModal} token={props.token}/>
+          <InvoiceShow showModal={props.showModal} token={props.token} />
         </View>
       </View>
     </Modal>

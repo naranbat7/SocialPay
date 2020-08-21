@@ -35,10 +35,13 @@ export class InvoiceShow extends Component {
       modalPayVisible: false,
       resultIndex: 0,
       resultData: {amount: 0},
+      resultVisible: false,
+      text: 'Амжилтгүй',
+      color: '#ff6b6b',
     };
   }
 
-  componentDidMount() {
+  sendAxios = () => {
     console.log(this.props.token);
     axios
       .get('http://192.168.205.168:8050/api/transaction/invoice', {
@@ -58,7 +61,25 @@ export class InvoiceShow extends Component {
         console.log(err);
       });
     this.setState({loading: false});
+  };
+
+  componentDidMount() {
+    this.sendAxios();
   }
+
+  answerWarn = () => {
+    setTimeout(() => {
+      this.setState({resultVisible: false});
+    }, 1500);
+  };
+
+  answer = value => {
+    let title = value ? 'Амжилттай' : 'Амжилтгүй';
+    let col = value ? '#1dd1a1' : '#ff6b6b';
+    this.setState({resultVisible: true, text: title, color: col});
+    this.sendAxios();
+    this.answerWarn();
+  };
 
   showResult = value => [this.setState({modalVisible: value})];
   showPayResult = value => [this.setState({modalPayVisible: value})];
@@ -69,6 +90,15 @@ export class InvoiceShow extends Component {
 
   changePayIndex = value => {
     this.setState({modalPayVisible: true, resultData: value});
+  };
+
+  deleteResult = () => {
+    this.showResult(false);
+  };
+
+  deletePayResult = () => {
+    this.sendAxios();
+    this.showPayResult(false);
   };
 
   render() {
@@ -123,6 +153,10 @@ export class InvoiceShow extends Component {
                 resultIndex={this.state.resultIndex}
                 changeIndex={this.changePayIndex}
                 resultData={this.state.resultData}
+                token={this.props.token}
+                deletePayResult={() => this.deletePayResult()}
+                answerTrue={() => this.answer(true)}
+                answerFalse={() => this.answer(false)}
               />
             ) : (
               <PayList2
@@ -133,9 +167,18 @@ export class InvoiceShow extends Component {
                 resultIndex={this.state.resultIndex}
                 changeIndex={this.changeIndex}
                 resultData={this.state.resultData}
+                token={this.props.token}
+                deleteResult={() => this.deleteResult()}
+                answerTrue={() => this.answer(true)}
+                answerFalse={() => this.answer(false)}
               />
             )}
           </View>
+          <Result
+            modalVisible={this.state.resultVisible}
+            color={this.state.color}
+            text={this.state.text}
+          />
         </View>
       </SafeAreaView>
     );
@@ -181,6 +224,10 @@ const PayList1 = props => {
         closeResult={props.closeResult}
         data={props.resultData}
         resultIndex={props.resultIndex}
+        token={props.token}
+        deletePayResult={props.deletePayResult}
+        answerTrue={props.answerTrue}
+        answerFalse={props.answerFalse}
       />
     </ScrollView>
   );
@@ -225,8 +272,47 @@ const PayList2 = props => {
         closeResult={props.closeResult}
         data={props.resultData}
         resultIndex={props.resultIndex}
+        token={props.token}
+        deleteResult={props.deleteResult}
+        answerTrue={props.answerTrue}
+        answerFalse={props.answerFalse}
       />
     </ScrollView>
+  );
+};
+
+const Result = props => {
+  return (
+    <Modal visible={props.modalVisible} transparent={true}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+          backgroundColor: 'rgba(0,0,0,0.3)',
+        }}>
+        <View
+          style={{
+            width: 200,
+            height: 70,
+            backgroundColor: '#fff',
+            borderRadius: 10,
+            marginBottom: 300,
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 18,
+              color: props.color && props.color,
+            }}>
+            {props.text && props.text}
+          </Text>
+        </View>
+      </View>
+    </Modal>
   );
 };
 
@@ -282,7 +368,7 @@ const css = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 10,
     marginHorizontal: 10,
-    flex: 1,
+    height: '87%',
   },
   invoiceList: {
     borderBottomWidth: 0.3,

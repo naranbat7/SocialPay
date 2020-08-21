@@ -11,6 +11,7 @@ import {
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import SocialPinChecker from './SocialPinChecker';
 
 const axios = require('axios');
 
@@ -25,6 +26,7 @@ export class TransactionSender extends Component {
       token: null,
       tel: null,
       remark: null,
+      isPinCheck: false,
     };
   }
 
@@ -47,13 +49,18 @@ export class TransactionSender extends Component {
     }, 1500);
   }
 
-  sendInvoice = props => {
-    props.setLoading();
+  showPinCheck = () => {
+    this.setState({isPinCheck: true});
+  };
+
+  sendInvoice = () => {
+    this.setState({isPinCheck: false});
+    this.props.setLoading();
     axios
       .post(
-        'http://192.168.205.168:8050/api/transaction',
+        'http://192.168.205.168:8050/api/transaction?language=mn',
         {
-          amount: props.money,
+          amount: this.props.money,
           phone: this.state.tel,
           remarks: this.state.remark,
         },
@@ -65,15 +72,15 @@ export class TransactionSender extends Component {
         },
       )
       .then(response => {
-        props.answerTrue();
+        this.props.answerTrue();
         console.log('Амжилттай гүйлгээ хийлээ');
       })
       .catch(error => {
-        props.answerFalse();
+        this.props.answerFalse();
         console.log('Гүйлгээ хийхэд алдаа гарлаа');
         console.log(error);
       });
-    props.showModal();
+    this.props.showModal();
   };
 
   render() {
@@ -238,7 +245,7 @@ export class TransactionSender extends Component {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.sendInvoice(this.props)}
+              onPress={() => this.showPinCheck()}
               style={{
                 borderColor: '#fff',
                 backgroundColor: '#1dd1a1',
@@ -258,6 +265,9 @@ export class TransactionSender extends Component {
               </Text>
             </TouchableOpacity>
           </View>
+          <Modal visible={this.state.isPinCheck}>
+            <SocialPinChecker ifCorrect={() => this.sendInvoice()} />
+          </Modal>
         </View>
       </SafeAreaView>
     );
