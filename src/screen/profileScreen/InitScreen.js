@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   AsyncStorage,
+  BackHandler,
 } from 'react-native';
 import Name from '../../components/user/Name';
 import Item from '../../components/user/Item';
@@ -126,7 +127,6 @@ class InitScreen extends Component {
               text="Холболт салгах"
               style={{borderBottomWidth: 0}}
               func={() => {
-                this.props.navigation.navigate('Login');
                 // this.props.setlogin;
                 AsyncStorage.removeItem('information', errs => {
                   if (!errs) {
@@ -138,6 +138,7 @@ class InitScreen extends Component {
                     console.log('Амжилттай устгалаа');
                   } else console.log(errs);
                 });
+                BackHandler.exitApp();
               }}
             />
           </View>
