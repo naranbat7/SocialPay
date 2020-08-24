@@ -1,68 +1,43 @@
-import React, {useState} from 'react';
+import React, {useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import {
-  Dimensions,
+  AppRegistry,
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+[]
+import PhoneAuth from '../../screen/PhoneAuth';
 
 const axios = require('axios');
 
 const Form = props => {
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
+ 
 
   return (
+   
+
+
     <View style={styles.container}>
-      <TextInput
-        style={styles.inputBox}
-        underlineColorAndroid="rgba(0,0,0,0)"
-        placeholder="Username"
-        placeholderTextColor="#000000"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.inputBox}
-        underlineColorAndroid="rgba(0,0,0,0)"
-        placeholder="Password"
-        secureTextEntry={true}
-        placeholderTextColor="#000000"
-        value={password}
-        onChangeText={setPassword}
-      />
+       
+      
       <TouchableOpacity
         style={styles.button}
-        onPress={() => {
-          props.setLoadingTrue();
-          axios
-            .post(
-              'http://192.168.205.168:8050/api/info/auth',
-              {password: `${password}`, username: `${username}`},
-              {
-                'Content-Type': 'application/json',
-              },
-            )
-            .then(response => {
-              console.log('Амжилттай нэвтэрлээ');
-              console.log(response.data);
-              props.setlogIn(response.data);
-            })
-            .catch(error => {
-              console.log('Нэвтэрч чадсангүй');
-              props.setlogIn('error');
-              console.log(error);
-            });
-        }}>
+        title="Form"
+       
+        >
         <Text style={styles.buttonText}>{props.type}</Text>
       </TouchableOpacity>
     </View>
   );
 };
 
-export default Form;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -96,7 +71,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#000000',
     backgroundColor: '#ffffff',
-    borderRadius: 25,
+    borderRadius:5 ,
     paddingHorizontal: 16,
     fontSize: 16,
     color: '#0984e3',
@@ -106,11 +81,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 45,
-    width: 150,
-    borderWidth: 2,
+    width: 350,
+    borderWidth: 0,
     borderColor: '#000000',
-    backgroundColor: '#ffffff',
-    borderRadius: 25,
+    backgroundColor: '#5100FF',
+    borderRadius: 5,
     marginVertical: 10,
     paddingVertical: 12,
   },
@@ -118,7 +93,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     fontWeight: '500',
-    color: '#000000',
+    color: '#ffffff',
     textAlign: 'center',
   },
 });
+
+export default Form;

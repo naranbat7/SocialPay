@@ -53,7 +53,7 @@ export class SocialPinConnect extends Component {
       isPinCorrect: null,
       token: null,
     };
-  }
+  } 
 
   componentDidMount() {
     AsyncStorage.getItem('information', (errs, result) => {
@@ -145,6 +145,7 @@ export class SocialPinConnect extends Component {
                 css.circle,
                 this.state.code.length > 3 && css.circleChecked,
               ]}
+              
             />
           </View>
           {this.state.isPinCorrect ? (

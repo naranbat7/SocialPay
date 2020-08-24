@@ -15,12 +15,7 @@ export default class InitScreen extends Component {
           setlogIn={this.props.setlogIn}
           setLoadingTrue={this.props.setLoadingTrue}
         />
-        <View style={styles.SignUpTextCont}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Signup')}>
-            <Text style={styles.SignUpButton}> Бүртгүүлэх </Text>
-          </TouchableOpacity>
-        </View>
+        
       </View>
     );
   }
@@ -43,6 +38,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     alignItems: 'flex-end',
     justifyContent: 'center',
+    marginBottom: '25%'
   },
   SignUpButton: {
     color: '#000000',

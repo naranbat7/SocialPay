@@ -8,6 +8,8 @@ import NotificationView from './src/components/NotificationView';
 import AppNavigator from './src/components/AppNavigator';
 import SplashScreen from './src/screen/SplashScreen';
 import SocialPinConnect from './src/screen/SocialPinConnect';
+import Form from './src/components/login/Form';
+import PhoneAuth from './src/screen/PhoneAuth';
 
 const axios = require('axios');
 
@@ -213,6 +215,12 @@ export default class App extends Component {
         ) : (
           <View style={{flex: 1}}>
             <AppNavigator />
+            <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Form" component={Form} />
+        <Stack.Screen name="PhoneAuth" component={PhoneAuth} />
+            </Stack.Navigator>
+            </NavigationContainer>
 
             <NotificationView
               close={() => this.isNotif(false)}
