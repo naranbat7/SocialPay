@@ -136,6 +136,12 @@ export default class App extends Component {
       duration: 400,
       useNativeDriver: true,
     }).start();
+
+    if (value == true) {
+      setTimeout(() => {
+        this.isNotif(false);
+      }, 3000);
+    }
   };
 
   // * Check firebase notification handler depends on firebase server

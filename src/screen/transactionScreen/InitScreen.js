@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import InvoiceSender from '../InvoiceSender';
 import TransactionSender from '../TransactionSender';
 import InvoiceShow from '../InvoiceShow';
+import SocialPinChecker from '../SocialPinChecker';
 
 const buttonData = [
   '1',
@@ -52,6 +53,7 @@ export class InitScreen extends Component {
       text: 'Амжилтгүй',
       color: '#ff6b6b',
       loading: false,
+      isPinCheck: false,
     };
   }
 
@@ -113,7 +115,11 @@ export class InitScreen extends Component {
   };
 
   showInvoiceList = value => {
-    this.setState({showInvoiceList: value});
+    this.setState({showInvoiceList: value, isPinCheck: false});
+  };
+
+  showPinChecker = () => {
+    this.setState({isPinCheck: true});
   };
 
   showInvoice = value => {
@@ -180,7 +186,7 @@ export class InitScreen extends Component {
       <SafeAreaView style={css.container}>
         <View style={css.topContainer}>
           <TouchableOpacity
-            onPress={() => this.showInvoiceList(true)}
+            onPress={() => this.showPinChecker()}
             style={[
               top.modalTransaction,
               {transform: [{translateX: this.state.transY}]},
@@ -269,6 +275,9 @@ export class InitScreen extends Component {
           color={this.state.color}
           text={this.state.text}
         />
+        <Modal visible={this.state.isPinCheck}>
+          <SocialPinChecker ifCorrect={() => this.showInvoiceList(true)} />
+        </Modal>
         <Loading modalVisible={this.state.loading} />
       </SafeAreaView>
     );
